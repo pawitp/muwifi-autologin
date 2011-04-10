@@ -1,0 +1,8 @@
+bin
+gen
+
+*.apk
+*.ap_
+*.dex
+*.class
+*R.java
