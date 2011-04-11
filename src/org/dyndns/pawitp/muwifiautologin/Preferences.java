@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	public static String KEY_ENABLED = "enabled";
-	public static String KEY_USERNAME = "username";
-	public static String KEY_PASSWORD = "password";
-	public static String KEY_VERSION = "version";
+	static final String KEY_ENABLED = "enabled";
+	static final String KEY_USERNAME = "username";
+	static final String KEY_PASSWORD = "password";
+	static final String KEY_VERSION = "version";
 	
     /** Called when the activity is first created. */
     @Override

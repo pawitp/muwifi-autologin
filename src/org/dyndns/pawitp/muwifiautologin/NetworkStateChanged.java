@@ -28,12 +28,12 @@ import android.widget.Toast;
 
 public class NetworkStateChanged extends BroadcastReceiver {
 
-	public static String TAG = "NetworkStateChanged";
-	public static String SSID = "MU-WiFi";
-	public static String REDIRECT_PAGE_PATTERN = "TODO";
-	public static String FORM_USERNAME = "TODO";
-	public static String FORM_PASSWORD = "TODO";
-	public static String FORM_URL = "TODO";
+	static final String TAG = "NetworkStateChanged";
+	static final String SSID = "MU-WiFi";
+	static final String REDIRECT_PAGE_PATTERN = "TODO";
+	static final String FORM_USERNAME = "TODO";
+	static final String FORM_PASSWORD = "TODO";
+	static final String FORM_URL = "TODO";
 	
 	private SharedPreferences mPrefs;
 	private Context mContext;
