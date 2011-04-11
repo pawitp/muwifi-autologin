@@ -4,7 +4,7 @@
     
     
     
-    <string name="app_name">MU-WiFi Autologin</string><string name="ssid">MU-WiFi</string>
+    <string name="app_name">MU-WiFi Autologin</string>
 <string name="pref_username">Username</string><string name="pref_username_summary">Click to set username</string>
 <string name="pref_password">Password</string>
 <string name="pref_password_summary">Click to change password</string><string name="pref_enabled">Enabled</string>
