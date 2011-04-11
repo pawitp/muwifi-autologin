@@ -9,6 +9,7 @@
 <string name="pref_password">Password</string>
 <string name="pref_password_summary">Click to change password</string><string name="pref_enabled">Enabled</string>
 <string name="pref_enabled_summary">Enable autologin to MU-WiFi</string><string name="pref_version_summary">Version %s</string><string name="pref_author">Author</string><string name="pref_author_summary">pawitp</string>
+<string name="login_successful">Automatic login to MU-WiFi successful.</string>
 
 
 

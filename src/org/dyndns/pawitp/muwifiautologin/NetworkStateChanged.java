@@ -24,6 +24,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NetworkStateChanged extends BroadcastReceiver {
 
@@ -66,7 +67,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 				Log.v(TAG, "Login required");
 				login();
 				if (!loginRequired()) {
-					// TODO Toast notification
+					Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
+					
 					Log.v(TAG, "Login successful");
 				} else {
 					// TODO Notification
