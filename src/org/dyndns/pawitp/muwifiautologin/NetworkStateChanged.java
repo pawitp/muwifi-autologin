@@ -1,5 +1,21 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +29,10 @@ public class NetworkStateChanged extends BroadcastReceiver {
 
 	public static String TAG = "NetworkStateChanged";
 	public static String SSID = "MU-WiFi";
+	public static String REDIRECT_PAGE_PATTERN = "TODO";
+	public static String FORM_USERNAME = "TODO";
+	public static String FORM_PASSWORD = "TODO";
+	public static String FORM_URL = "TODO";
 	
 	private SharedPreferences mPrefs;
 	private Context mContext;
@@ -40,5 +60,53 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		}
 		
 		Log.v(TAG, "Connected to the correct network");
+		
+		try {
+			if (loginRequired()) {
+				Log.v(TAG, "Login required");
+				login();
+				if (!loginRequired()) {
+					// TODO Toast notification
+					Log.v(TAG, "Login successful");
+				} else {
+					// TODO Notification
+					Log.v(TAG, "Login failed");
+				}
+			} else {
+				Log.v(TAG, "No login required");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+	
+	private boolean loginRequired() throws IOException {
+		// TODO Timeout
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpGet httpget = new HttpGet("http://www.google.com/");
+		HttpResponse response = httpclient.execute(httpget);
+		HttpEntity entity = response.getEntity();
+		InputStream is = entity.getContent();
+		Scanner scanner = new Scanner(is);
+		String found = scanner.findWithinHorizon(REDIRECT_PAGE_PATTERN, 0);
+		scanner.close();
+		if (found == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private void login() throws IOException {
+		// TODO timeout
+		HttpClient httpclient = new DefaultHttpClient();
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		formparams.add(new BasicNameValuePair(FORM_USERNAME, mPrefs.getString(Preferences.KEY_USERNAME, null)));
+		formparams.add(new BasicNameValuePair(FORM_PASSWORD, mPrefs.getString(Preferences.KEY_PASSWORD, null)));
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+		HttpPost httppost = new HttpPost(FORM_URL);
+		httppost.setEntity(entity);
+		httpclient.execute(httppost);
+		// TODO deal with response
 	}
 }
