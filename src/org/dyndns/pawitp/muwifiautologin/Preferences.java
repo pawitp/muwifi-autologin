@@ -54,6 +54,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         String username = getPreferenceManager().getSharedPreferences().getString(KEY_USERNAME, "");
         if (username.length() != 0) {
         	findPreference(KEY_USERNAME).setSummary(username);
+        } else {
+        	findPreference(KEY_USERNAME).setSummary(R.string.pref_username_summary);
         }
 	}
 }
