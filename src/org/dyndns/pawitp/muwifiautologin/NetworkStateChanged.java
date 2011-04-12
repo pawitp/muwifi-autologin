@@ -45,6 +45,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final int CONNECTION_TIMEOUT = 2000;
 	static final int SOCKET_TIMEOUT = 2000;
 	
+	private Context mContext;
 	private SharedPreferences mPrefs;
 	private HttpClient mHttpClient;
 	
@@ -56,14 +57,16 @@ public class NetworkStateChanged extends BroadcastReceiver {
 			return;
 		}
 		
+		mContext = context;
+		
 		// Check SSID
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
 		if (!wifi.getConnectionInfo().getSSID().equalsIgnoreCase(SSID)) {
 			return;
 		}
 		
 		// Check preference
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		if (!mPrefs.getBoolean(Preferences.KEY_ENABLED, false)) {
 			return;
 		}
@@ -80,7 +83,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 				Log.v(TAG, "Login required");
 				
 				login();
-				Toast.makeText(context, R.string.login_successful, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
 				Log.v(TAG, "Login successful");
 			} else {
 				Log.v(TAG, "No login required");
@@ -88,40 +91,30 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		} catch (LoginException e) {
 			Log.v(TAG, "Login failed");
 			
-			NotificationManager notifMan = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			
-			Intent notificationIntent = new Intent(context, ErrorWebView.class);
-			notificationIntent.setAction(ErrorWebView.class.getName());
+			Intent notificationIntent = new Intent(mContext, ErrorWebView.class);
 			notificationIntent.putExtra(ErrorWebView.EXTRA_CONTENT, e.getMessage());
-			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-			
-			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-			
-			// TODO better icon
-			Notification notification = new Notification(android.R.drawable.stat_sys_warning, context.getString(R.string.ticker_login_error), System.currentTimeMillis());
-			notification.setLatestEventInfo(context, context.getString(R.string.notification_login_error_title), context.getString(R.string.notification_login_error_text), contentIntent);
-			notification.flags = Notification.FLAG_AUTO_CANCEL;
-			
-			notifMan.notify(LOGIN_ERROR_ID, notification);
+			createNotification(notificationIntent);
 		} catch (IOException e) {
 			Log.v(TAG, "Login failed: IOException");
 			
-			NotificationManager notifMan = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			
-			Intent notificationIntent = new Intent(context, ErrorTextView.class);
-			notificationIntent.setAction(ErrorTextView.class.getName());
+			Intent notificationIntent = new Intent(mContext, ErrorTextView.class);
 			notificationIntent.putExtra(ErrorTextView.EXTRA_CONTENT, e.toString());
-			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-			
-			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-			
-			// TODO better icon
-			Notification notification = new Notification(android.R.drawable.stat_sys_warning, context.getString(R.string.ticker_login_error), System.currentTimeMillis());
-			notification.setLatestEventInfo(context, context.getString(R.string.notification_login_error_title), context.getString(R.string.notification_login_error_text), contentIntent);
-			notification.flags = Notification.FLAG_AUTO_CANCEL;
-			
-			notifMan.notify(LOGIN_ERROR_ID, notification);
+			createNotification(notificationIntent);
 		}
+	}
+
+	private void createNotification(Intent notificationIntent) {
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		
+		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+		
+		// TODO better icon
+		Notification notification = new Notification(android.R.drawable.stat_sys_warning, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
+		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_error_title), mContext.getString(R.string.notification_login_error_text), contentIntent);
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
+		
+		NotificationManager notifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifMan.notify(LOGIN_ERROR_ID, notification);
 	}
 	
 	private boolean loginRequired() throws IOException {
