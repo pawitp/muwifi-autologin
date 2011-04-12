@@ -1,5 +1,6 @@
 /bin
 /gen
+/proguard
 
 *.apk
 *.ap_
