@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +32,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String TAG = "NetworkStateChanged";
 	static final String SSID = "MU-WiFi";
 	static final String REDIRECT_PAGE_PATTERN = "TODO";
+	static final String LOGIN_SUCCESSFUL_PATTERN = "TODO"; // not regex
 	static final String FORM_USERNAME = "TODO";
 	static final String FORM_PASSWORD = "TODO";
 	static final String FORM_URL = "TODO";
@@ -65,18 +67,16 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		try {
 			if (loginRequired()) {
 				Log.v(TAG, "Login required");
+				
 				login();
-				if (!loginRequired()) {
-					Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
-					
-					Log.v(TAG, "Login successful");
-				} else {
-					// TODO Notification
-					Log.v(TAG, "Login failed");
-				}
+				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
+				Log.v(TAG, "Login successful");
 			} else {
 				Log.v(TAG, "No login required");
 			}
+		} catch (LoginException e) {
+			// TODO notification
+			Log.v(TAG, "Login failed");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
@@ -99,7 +99,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		}
 	}
 	
-	private void login() throws IOException {
+	private void login() throws IOException, LoginException {
 		// TODO timeout
 		HttpClient httpclient = new DefaultHttpClient();
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
@@ -108,7 +108,13 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
 		HttpPost httppost = new HttpPost(FORM_URL);
 		httppost.setEntity(entity);
-		httpclient.execute(httppost);
-		// TODO deal with response
+		HttpResponse response = httpclient.execute(httppost);
+		String strRes = EntityUtils.toString(response.getEntity());
+		
+		if (strRes.contains(LOGIN_SUCCESSFUL_PATTERN)) {
+			// login successful
+		} else {
+			throw new LoginException(strRes);
+		}
 	}
 }
