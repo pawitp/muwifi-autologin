@@ -38,12 +38,9 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String FORM_URL = "TODO";
 	
 	private SharedPreferences mPrefs;
-	private Context mContext;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		mContext = context;
-		
 		// Check network connected
 		NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 		if (!netInfo.isConnected()) {
@@ -69,7 +66,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 				Log.v(TAG, "Login required");
 				
 				login();
-				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, R.string.login_successful, Toast.LENGTH_SHORT).show();
 				Log.v(TAG, "Login successful");
 			} else {
 				Log.v(TAG, "No login required");
