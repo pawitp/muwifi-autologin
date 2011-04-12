@@ -17,6 +17,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +39,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String FORM_USERNAME = "TODO";
 	static final String FORM_PASSWORD = "TODO";
 	static final String FORM_URL = "TODO";
+	static final int LOGIN_ERROR_ID = 1;
 	
 	private SharedPreferences mPrefs;
 	private HttpClient mHttpClient;
@@ -75,8 +79,23 @@ public class NetworkStateChanged extends BroadcastReceiver {
 				Log.v(TAG, "No login required");
 			}
 		} catch (LoginException e) {
-			// TODO notification
 			Log.v(TAG, "Login failed");
+			
+			NotificationManager notifMan = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			
+			Intent notificationIntent = new Intent(context, ErrorWebView.class);
+			notificationIntent.setAction(ErrorWebView.class.getName());
+			notificationIntent.putExtra(ErrorWebView.EXTRA_CONTENT, e.getMessage());
+			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+			
+			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+			
+			// TODO better icon
+			Notification notification = new Notification(android.R.drawable.stat_sys_warning, context.getString(R.string.ticker_login_error), System.currentTimeMillis());
+			notification.setLatestEventInfo(context, context.getString(R.string.notification_login_error_title), context.getString(R.string.notification_login_error_text), contentIntent);
+			notification.flags = Notification.FLAG_AUTO_CANCEL;
+			
+			notifMan.notify(LOGIN_ERROR_ID, notification);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
