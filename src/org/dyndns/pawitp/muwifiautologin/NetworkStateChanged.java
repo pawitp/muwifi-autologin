@@ -42,8 +42,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String FORM_PASSWORD = "TODO";
 	static final String FORM_URL = "TODO";
 	static final int LOGIN_ERROR_ID = 1;
-	static final int CONNECTION_TIMEOUT = 1000;
-	static final int SOCKET_TIMEOUT = 1000;
+	static final int CONNECTION_TIMEOUT = 2000;
+	static final int SOCKET_TIMEOUT = 2000;
 	
 	private SharedPreferences mPrefs;
 	private HttpClient mHttpClient;
