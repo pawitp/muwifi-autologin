@@ -97,7 +97,23 @@ public class NetworkStateChanged extends BroadcastReceiver {
 			
 			notifMan.notify(LOGIN_ERROR_ID, notification);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Log.v(TAG, "Login failed: IOException");
+			
+			NotificationManager notifMan = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			
+			Intent notificationIntent = new Intent(context, ErrorTextView.class);
+			notificationIntent.setAction(ErrorTextView.class.getName());
+			notificationIntent.putExtra(ErrorTextView.EXTRA_CONTENT, e.toString());
+			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+			
+			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+			
+			// TODO better icon
+			Notification notification = new Notification(android.R.drawable.stat_sys_warning, context.getString(R.string.ticker_login_error), System.currentTimeMillis());
+			notification.setLatestEventInfo(context, context.getString(R.string.notification_login_error_title), context.getString(R.string.notification_login_error_text), contentIntent);
+			notification.flags = Notification.FLAG_AUTO_CANCEL;
+			
+			notifMan.notify(LOGIN_ERROR_ID, notification);
 		}
 	}
 	
