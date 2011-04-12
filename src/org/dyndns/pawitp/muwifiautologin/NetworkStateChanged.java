@@ -15,6 +15,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Notification;
@@ -40,6 +42,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String FORM_PASSWORD = "TODO";
 	static final String FORM_URL = "TODO";
 	static final int LOGIN_ERROR_ID = 1;
+	static final int CONNECTION_TIMEOUT = 1000;
+	static final int SOCKET_TIMEOUT = 1000;
 	
 	private SharedPreferences mPrefs;
 	private HttpClient mHttpClient;
@@ -67,6 +71,9 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		Log.v(TAG, "Connected to the correct network");
 		
 		mHttpClient = new DefaultHttpClient();
+		HttpParams params = mHttpClient.getParams();
+		HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
 		
 		try {
 			if (loginRequired()) {
@@ -118,7 +125,6 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	}
 	
 	private boolean loginRequired() throws IOException {
-		// TODO Timeout
 		HttpGet httpget = new HttpGet("http://www.google.com/");
 		HttpResponse response = mHttpClient.execute(httpget);
 		HttpEntity entity = response.getEntity();
@@ -134,7 +140,6 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	}
 	
 	private void login() throws IOException, LoginException {
-		// TODO timeout
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair(FORM_USERNAME, mPrefs.getString(Preferences.KEY_USERNAME, null)));
 		formparams.add(new BasicNameValuePair(FORM_PASSWORD, mPrefs.getString(Preferences.KEY_PASSWORD, null)));
