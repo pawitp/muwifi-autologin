@@ -38,6 +38,7 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	static final String FORM_URL = "TODO";
 	
 	private SharedPreferences mPrefs;
+	private HttpClient mHttpClient;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -61,6 +62,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		
 		Log.v(TAG, "Connected to the correct network");
 		
+		mHttpClient = new DefaultHttpClient();
+		
 		try {
 			if (loginRequired()) {
 				Log.v(TAG, "Login required");
@@ -81,9 +84,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	
 	private boolean loginRequired() throws IOException {
 		// TODO Timeout
-		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet("http://www.google.com/");
-		HttpResponse response = httpclient.execute(httpget);
+		HttpResponse response = mHttpClient.execute(httpget);
 		HttpEntity entity = response.getEntity();
 		InputStream is = entity.getContent();
 		Scanner scanner = new Scanner(is);
@@ -98,14 +100,13 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	
 	private void login() throws IOException, LoginException {
 		// TODO timeout
-		HttpClient httpclient = new DefaultHttpClient();
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair(FORM_USERNAME, mPrefs.getString(Preferences.KEY_USERNAME, null)));
 		formparams.add(new BasicNameValuePair(FORM_PASSWORD, mPrefs.getString(Preferences.KEY_PASSWORD, null)));
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
 		HttpPost httppost = new HttpPost(FORM_URL);
 		httppost.setEntity(entity);
-		HttpResponse response = httpclient.execute(httppost);
+		HttpResponse response = mHttpClient.execute(httppost);
 		String strRes = EntityUtils.toString(response.getEntity());
 		
 		if (strRes.contains(LOGIN_SUCCESSFUL_PATTERN)) {
