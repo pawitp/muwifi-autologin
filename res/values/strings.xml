@@ -10,7 +10,7 @@
 <string name="pref_password_summary">Click to change password</string><string name="pref_enabled">Enabled</string>
 <string name="pref_enabled_summary">Enable autologin to MU-WiFi</string><string name="pref_version_summary">Version %s</string><string name="pref_author">Author</string><string name="pref_author_summary">pawitp</string>
 <string name="login_successful">Automatic login to MU-WiFi successful.</string>
-<string name="ticker_login_error">An error has occured while trying to automatically login to MU-WiFi.</string>
+<string name="ticker_login_error">Unable to login to MU-WiFi.</string>
 <string name="notification_login_error_title">Unable to login to MU-WiFi</string>
 <string name="notification_login_error_text">Click to view error.</string>
 
