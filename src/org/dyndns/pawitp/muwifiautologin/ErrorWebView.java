@@ -15,7 +15,7 @@ public class ErrorWebView extends Activity {
 		WebView webview = new WebView(this);
 		webview.getSettings().setBuiltInZoomControls(true);
 		setContentView(webview);
-		webview.loadDataWithBaseURL(NetworkStateChanged.FORM_URL, getIntent().getStringExtra(EXTRA_CONTENT), null, "utf-8", null);
+		webview.loadDataWithBaseURL(MuWifiClient.FORM_URL, getIntent().getStringExtra(EXTRA_CONTENT), null, "utf-8", null);
 	}	
 	
 }

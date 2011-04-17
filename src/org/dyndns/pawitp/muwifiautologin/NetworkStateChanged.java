@@ -1,23 +1,6 @@
 package org.dyndns.pawitp.muwifiautologin;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -36,18 +19,10 @@ public class NetworkStateChanged extends BroadcastReceiver {
 
 	static final String TAG = "NetworkStateChanged";
 	static final String SSID = "MU-WiFi";
-	static final String REDIRECT_PAGE_PATTERN = "Form used by registered users to login";
-	static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page"; // not regex
-	static final String FORM_USERNAME = "user";
-	static final String FORM_PASSWORD = "password";
-	static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
 	static final int LOGIN_ERROR_ID = 1;
-	static final int CONNECTION_TIMEOUT = 2000;
-	static final int SOCKET_TIMEOUT = 2000;
 	
 	private Context mContext;
 	private SharedPreferences mPrefs;
-	private HttpClient mHttpClient;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -73,16 +48,13 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		
 		Log.v(TAG, "Connected to the correct network");
 		
-		mHttpClient = new DefaultHttpClient();
-		HttpParams params = mHttpClient.getParams();
-		HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+		MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 		
 		try {
-			if (loginRequired()) {
+			if (loginClient.loginRequired()) {
 				Log.v(TAG, "Login required");
 				
-				login();
+				loginClient.login();
 				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
 				Log.v(TAG, "Login successful");
 			} else {
@@ -116,36 +88,5 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		NotificationManager notifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifMan.notify(LOGIN_ERROR_ID, notification);
 	}
-	
-	private boolean loginRequired() throws IOException {
-		HttpGet httpget = new HttpGet("http://www.google.com/");
-		HttpResponse response = mHttpClient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		InputStream is = entity.getContent();
-		Scanner scanner = new Scanner(is);
-		String found = scanner.findWithinHorizon(REDIRECT_PAGE_PATTERN, 0);
-		scanner.close();
-		if (found == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private void login() throws IOException, LoginException {
-		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-		formparams.add(new BasicNameValuePair(FORM_USERNAME, mPrefs.getString(Preferences.KEY_USERNAME, null)));
-		formparams.add(new BasicNameValuePair(FORM_PASSWORD, mPrefs.getString(Preferences.KEY_PASSWORD, null)));
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-		HttpPost httppost = new HttpPost(FORM_URL);
-		httppost.setEntity(entity);
-		HttpResponse response = mHttpClient.execute(httppost);
-		String strRes = EntityUtils.toString(response.getEntity());
-		
-		if (strRes.contains(LOGIN_SUCCESSFUL_PATTERN)) {
-			// login successful
-		} else {
-			throw new LoginException(strRes);
-		}
-	}
+
 }
