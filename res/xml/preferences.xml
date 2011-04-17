@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<Preference android:title="@string/pref_login_now" android:key="login_now"></Preference>
+	<PreferenceCategory android:title="@string/pref_preferences">
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="enabled"
+			android:title="@string/pref_enabled"
+			android:summary="@string/pref_enabled_summary"/>
+		<EditTextPreference
+			android:key="username"
+			android:title="@string/pref_username"
+			android:summary="@string/pref_username_summary"/>
+		<EditTextPreference
+			android:key="password"
+			android:password="true"
+			android:title="@string/pref_password"
+			android:summary="@string/pref_password_summary"/>
+	</PreferenceCategory>
 	
-	
-	
-
-<Preference android:title="@string/pref_login_now" android:key="login_now"></Preference><PreferenceCategory android:title="@string/pref_preferences"><CheckBoxPreference
-		android:defaultValue="false"
-		android:key="enabled" android:title="@string/pref_enabled" android:summary="@string/pref_enabled_summary"/><EditTextPreference
-		android:key="username" android:title="@string/pref_username" android:summary="@string/pref_username_summary"/><EditTextPreference
-		android:key="password"
-		android:password="true" android:title="@string/pref_password" android:summary="@string/pref_password_summary"/></PreferenceCategory>
-<PreferenceCategory android:title="@string/pref_about"><Preference android:key="version" android:title="@string/app_name" android:summary="@string/pref_version_summary"></Preference><Preference android:summary="@string/pref_author_summary" android:title="@string/pref_author"></Preference>
-</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_about">
+		<Preference
+			android:key="version" android:title="@string/app_name"
+			android:summary="@string/pref_version_summary"/>
+		<Preference
+			android:summary="@string/pref_author_summary"
+			android:title="@string/pref_author"/>
+	</PreferenceCategory>
 </PreferenceScreen>

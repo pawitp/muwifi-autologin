@@ -11,15 +11,16 @@
             </intent-filter>
         </activity>
 
-	<activity android:name=".ErrorTextView"></activity>
-    <activity android:name=".ErrorWebView"></activity>
-    <receiver android:name=".NetworkStateChanged"><intent-filter><action android:name="android.net.wifi.STATE_CHANGE"></action></intent-filter>
-</receiver>
-    
-</application>
+		<activity android:name=".ErrorTextView"></activity>
+	    <activity android:name=".ErrorWebView"></activity>
+	    <receiver android:name=".NetworkStateChanged">
+	    	<intent-filter>
+	    		<action android:name="android.net.wifi.STATE_CHANGE"/>
+	    	</intent-filter>
+		</receiver>
+	</application>
 
-
-<uses-sdk android:minSdkVersion="7"></uses-sdk>
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-sdk android:minSdkVersion="7"></uses-sdk>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </manifest> 
