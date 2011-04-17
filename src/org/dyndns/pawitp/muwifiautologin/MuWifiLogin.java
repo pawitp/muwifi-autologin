@@ -15,33 +15,39 @@ public class MuWifiLogin {
 
 	static final String TAG = "MuWifiLogin";
 	static final int LOGIN_ERROR_ID = 1;
+	static final int LOGIN_ONGOING_ID = 2;
 	
 	private Context mContext;
 	private SharedPreferences mPrefs;
 	private NotificationManager mNotifMan;
+	private Notification mNotification;
 
 	public MuWifiLogin(Context context, SharedPreferences prefs) {
 		mContext = context;
 		mPrefs = prefs;
 		mNotifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		mNotification = new Notification(R.drawable.ic_stat_notify_key, null, System.currentTimeMillis());
+		mNotification.flags = Notification.FLAG_ONGOING_EVENT;
 	}
 	
 	public void login() {
 		MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 		
 		try {
+			updateOngoingNotification(mContext.getString(R.string.notification_login_ongoing_text_determine_requirement));
 			if (loginClient.loginRequired()) {
 				Log.v(TAG, "Login required");
 				
+				updateOngoingNotification(mContext.getString(R.string.notification_login_ongoing_text_logging_in));
 				loginClient.login();
-				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
 				
-				// cancel notification (in case there were any errors in previous attempts)
-				mNotifMan.cancel(LOGIN_ERROR_ID);
+				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
 				
 				Log.v(TAG, "Login successful");
 			} else {
 				Toast.makeText(mContext, R.string.no_login_required, Toast.LENGTH_SHORT).show();
+				
 				Log.v(TAG, "No login required");
 			}
 		} catch (LoginException e) {
@@ -49,17 +55,25 @@ public class MuWifiLogin {
 			
 			Intent notificationIntent = new Intent(mContext, ErrorWebView.class);
 			notificationIntent.putExtra(ErrorWebView.EXTRA_CONTENT, e.getMessage());
-			createNotification(notificationIntent);
+			createErrorNotification(notificationIntent);
 		} catch (IOException e) {
 			Log.v(TAG, "Login failed: IOException");
 			
 			Intent notificationIntent = new Intent(mContext, ErrorTextView.class);
 			notificationIntent.putExtra(ErrorTextView.EXTRA_CONTENT, e.toString());
-			createNotification(notificationIntent);
+			createErrorNotification(notificationIntent);
+		} finally {
+			mNotifMan.cancel(LOGIN_ONGOING_ID);
 		}
 	}
 	
-	private void createNotification(Intent notificationIntent) {
+	private void updateOngoingNotification(String message) {
+		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, new Intent() , 0);
+		mNotification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_ongoing_title), message, contentIntent);
+		mNotifMan.notify(LOGIN_ONGOING_ID, mNotification);
+	}
+	
+	private void createErrorNotification(Intent notificationIntent) {
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
@@ -70,5 +84,4 @@ public class MuWifiLogin {
 		
 		mNotifMan.notify(LOGIN_ERROR_ID, notification);
 	}
-	
 }
