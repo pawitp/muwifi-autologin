@@ -18,10 +18,12 @@ public class MuWifiLogin {
 	
 	private Context mContext;
 	private SharedPreferences mPrefs;
+	private NotificationManager mNotifMan;
 
 	public MuWifiLogin(Context context, SharedPreferences prefs) {
 		mContext = context;
 		mPrefs = prefs;
+		mNotifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 	
 	public void login() {
@@ -33,6 +35,10 @@ public class MuWifiLogin {
 				
 				loginClient.login();
 				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
+				
+				// cancel notification (in case there were any errors in previous attempts)
+				mNotifMan.cancel(LOGIN_ERROR_ID);
+				
 				Log.v(TAG, "Login successful");
 			} else {
 				Log.v(TAG, "No login required");
@@ -62,8 +68,7 @@ public class MuWifiLogin {
 		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_error_title), mContext.getString(R.string.notification_login_error_text), contentIntent);
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
-		NotificationManager notifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		notifMan.notify(LOGIN_ERROR_ID, notification);
+		mNotifMan.notify(LOGIN_ERROR_ID, notification);
 	}
 	
 }
