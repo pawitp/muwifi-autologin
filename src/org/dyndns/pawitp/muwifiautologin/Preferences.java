@@ -58,7 +58,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		updateUsernameSummary();
+		if (key.equals(KEY_USERNAME)) {
+			updateUsernameSummary();
+		}
 	}
 	
 	private void updateUsernameSummary() {
