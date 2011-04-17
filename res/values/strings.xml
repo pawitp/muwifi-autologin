@@ -8,7 +8,7 @@
 <string name="pref_preferences">Preferences</string><string name="pref_username">Username</string><string name="pref_username_summary">Click to set username</string>
 <string name="pref_password">Password</string>
 <string name="pref_password_summary">Click to change password</string><string name="pref_enabled">Enabled</string>
-<string name="pref_enabled_summary">Enable autologin to MU-WiFi</string><string name="pref_about">About</string><string name="pref_version_summary">Version %s</string><string name="pref_author">Author</string><string name="pref_author_summary">pawitp — MUICT</string>
+<string name="pref_enabled_summary">Enable autologin to MU-WiFi</string><string name="pref_about">About</string><string name="pref_version_summary">Version %s</string><string name="pref_author">Author</string><string name="pref_author_summary">pawitp @ MUICT</string>
 <string name="login_successful">Automatic login to MU-WiFi successful.</string>
 <string name="ticker_login_error">Unable to login to MU-WiFi.</string>
 <string name="notification_login_error_title">Unable to login to MU-WiFi</string>
