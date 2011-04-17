@@ -41,6 +41,7 @@ public class MuWifiLogin {
 				
 				Log.v(TAG, "Login successful");
 			} else {
+				Toast.makeText(mContext, R.string.no_login_required, Toast.LENGTH_SHORT).show();
 				Log.v(TAG, "No login required");
 			}
 		} catch (LoginException e) {
