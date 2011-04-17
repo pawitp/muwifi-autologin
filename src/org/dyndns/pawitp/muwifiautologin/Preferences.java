@@ -4,9 +4,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+	static final String KEY_LOGIN_NOW = "login_now";
 	static final String KEY_ENABLED = "enabled";
 	static final String KEY_USERNAME = "username";
 	static final String KEY_PASSWORD = "password";
@@ -27,6 +29,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		} catch (NameNotFoundException e) {
 			// kind of impossible
 		}
+		
+		// Login now callback
+		findPreference(KEY_LOGIN_NOW).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				MuWifiLogin login = new MuWifiLogin(Preferences.this, getPreferenceManager().getSharedPreferences());
+				login.login();
+				return true;
+			}
+		});
     }
 
 	@Override
