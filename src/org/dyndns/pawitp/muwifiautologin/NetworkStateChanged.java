@@ -36,11 +36,11 @@ public class NetworkStateChanged extends BroadcastReceiver {
 
 	static final String TAG = "NetworkStateChanged";
 	static final String SSID = "MU-WiFi";
-	static final String REDIRECT_PAGE_PATTERN = "TODO";
-	static final String LOGIN_SUCCESSFUL_PATTERN = "TODO"; // not regex
-	static final String FORM_USERNAME = "TODO";
-	static final String FORM_PASSWORD = "TODO";
-	static final String FORM_URL = "TODO";
+	static final String REDIRECT_PAGE_PATTERN = "Form used by registered users to login";
+	static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page"; // not regex
+	static final String FORM_USERNAME = "user";
+	static final String FORM_PASSWORD = "password";
+	static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
 	static final int LOGIN_ERROR_ID = 1;
 	static final int CONNECTION_TIMEOUT = 2000;
 	static final int SOCKET_TIMEOUT = 2000;
