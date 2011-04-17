@@ -64,8 +64,7 @@ public class MuWifiLogin {
 		
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 		
-		// TODO better icon
-		Notification notification = new Notification(android.R.drawable.stat_sys_warning, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
+		Notification notification = new Notification(R.drawable.ic_stat_notify_key, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
 		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_error_title), mContext.getString(R.string.notification_login_error_text), contentIntent);
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
