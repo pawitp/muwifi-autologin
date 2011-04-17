@@ -81,6 +81,7 @@ public class MuWifiLogin {
 		Notification notification = new Notification(R.drawable.ic_stat_notify_key, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
 		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_error_title), mContext.getString(R.string.notification_login_error_text), contentIntent);
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
+		notification.defaults = Notification.DEFAULT_ALL;
 		
 		mNotifMan.notify(LOGIN_ERROR_ID, notification);
 	}
