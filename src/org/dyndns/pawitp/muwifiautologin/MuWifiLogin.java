@@ -35,11 +35,11 @@ public class MuWifiLogin {
 		MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 		
 		try {
-			updateOngoingNotification(mContext.getString(R.string.notification_login_ongoing_text_determine_requirement));
+			updateOngoingNotification(mContext.getString(R.string.notify_login_ongoing_text_determine_requirement));
 			if (loginClient.loginRequired()) {
 				Log.v(TAG, "Login required");
 				
-				updateOngoingNotification(mContext.getString(R.string.notification_login_ongoing_text_logging_in));
+				updateOngoingNotification(mContext.getString(R.string.notify_login_ongoing_text_logging_in));
 				loginClient.login();
 				
 				Toast.makeText(mContext, R.string.login_successful, Toast.LENGTH_SHORT).show();
@@ -69,7 +69,7 @@ public class MuWifiLogin {
 	
 	private void updateOngoingNotification(String message) {
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, new Intent() , 0);
-		mNotification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_ongoing_title), message, contentIntent);
+		mNotification.setLatestEventInfo(mContext, mContext.getString(R.string.notify_login_ongoing_title), message, contentIntent);
 		mNotifMan.notify(LOGIN_ONGOING_ID, mNotification);
 	}
 	
@@ -79,7 +79,7 @@ public class MuWifiLogin {
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 		
 		Notification notification = new Notification(R.drawable.ic_stat_notify_key, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
-		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notification_login_error_title), mContext.getString(R.string.notification_login_error_text), contentIntent);
+		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notify_login_error_title), mContext.getString(R.string.notify_login_error_text), contentIntent);
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notification.defaults = Notification.DEFAULT_ALL;
 		
