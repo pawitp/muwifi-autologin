@@ -32,6 +32,8 @@ public class MuWifiLogin {
 	}
 	
 	public void login() {
+		mNotifMan.cancel(LOGIN_ERROR_ID); // clear any old notification
+		
 		MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 		
 		try {
