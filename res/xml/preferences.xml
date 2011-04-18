@@ -16,6 +16,22 @@
 			android:password="true"
 			android:title="@string/pref_password"
 			android:summary="@string/pref_password_summary"/>
+		<PreferenceScreen
+			android:title="@string/pref_error_notify_title"
+			android:key="error_notify">
+			<CheckBoxPreference
+				android:key="error_notify_sound"
+				android:title="@string/pref_error_notify_sound"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="error_notify_vibrate"
+				android:title="@string/pref_error_notify_vibrate"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="error_notify_lights"
+				android:title="@string/pref_error_notify_lights"
+				android:defaultValue="true"/>
+		</PreferenceScreen>
 	</PreferenceCategory>
 	
 	<PreferenceCategory android:title="@string/pref_about">

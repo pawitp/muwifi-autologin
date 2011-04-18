@@ -9,6 +9,13 @@
 	<string name="pref_password_summary">Click to change password</string>
 	<string name="pref_enabled">Enabled</string>
 	<string name="pref_enabled_summary">Enable autologin to MU-WiFi</string>
+	<string name="pref_error_notify_title">Error Notification</string>
+	<string name="pref_error_notify_summary">How you are notified of errors</string>
+	<string name="pref_error_notify_sound">Sound</string>
+	<string name="pref_error_notify_vibrate">Vibration</string>
+	<string name="pref_error_notify_lights">Lights</string>
+	<string name="pref_error_notify_none">None</string>
+	<string name="pref_error_notify_deliminator">,\u0020</string> <!-- A non-encoded trailing space will be removed -->
 	<string name="pref_about">About</string>
 	<string name="pref_version_summary">Version %s</string>
 	<string name="pref_author">Author</string>
