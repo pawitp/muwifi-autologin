@@ -1,16 +1,13 @@
 package org.dyndns.pawitp.muwifiautologin;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -26,8 +23,11 @@ import org.apache.http.util.EntityUtils;
 
 public class MuWifiClient {
 
+	// These are not regex
 	static final String REDIRECT_PAGE_PATTERN = "Form used by registered users to login";
-	static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page"; // not regex
+	static final String REDIRECT_PAGE_PATTERN2 = "Please wait.  You will be redirected to the authentication page in 6 seconds";
+	static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
+	
 	static final String FORM_USERNAME = "user";
 	static final String FORM_PASSWORD = "password";
 	static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
@@ -78,15 +78,11 @@ public class MuWifiClient {
 	public boolean loginRequired() throws IOException {
 		HttpGet httpget = new HttpGet("http://www.google.com/");
 		HttpResponse response = mHttpClient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		InputStream is = entity.getContent();
-		Scanner scanner = new Scanner(is);
-		String found = scanner.findWithinHorizon(REDIRECT_PAGE_PATTERN, 0);
-		scanner.close();
-		if (found == null) {
-			return false;
-		} else {
+		String strRes = EntityUtils.toString(response.getEntity());
+		if (strRes.contains(REDIRECT_PAGE_PATTERN) || strRes.contains(REDIRECT_PAGE_PATTERN2)) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
