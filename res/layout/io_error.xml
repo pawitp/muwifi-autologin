@@ -1,0 +1,8 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="5sp" android:layout_marginRight="5sp" android:id="@+id/io_error_linearLayout">
+    <TextView android:layout_height="wrap_content" android:text="@string/io_error_title" android:layout_width="fill_parent" android:textSize="25sp" android:textStyle="bold" android:id="@+id/io_error_lblTitle"></TextView>
+    <TextView android:text="@string/io_error_description" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/io_error_lblDescription"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10sp" android:text="@string/io_error_stack_trace" android:id="@+id/io_error_lblStackTrace"></TextView>
+    <ScrollView android:layout_width="fill_parent" android:id="@+id/io_error_scrollView" android:layout_height="fill_parent">
+        <EditText android:editable="false" android:scrollbars="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="EditText" android:id="@+id/io_error_txtStackTrace"></EditText>
+    </ScrollView>
+</LinearLayout>

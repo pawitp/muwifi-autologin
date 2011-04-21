@@ -13,6 +13,7 @@
 
 		<activity android:name=".ErrorTextView"></activity>
 	    <activity android:name=".ErrorWebView"></activity>
+	    <activity android:name=".IOErrorView"></activity>
 	    <receiver android:name=".NetworkStateChanged">
 	    	<intent-filter>
 	    		<action android:name="android.net.wifi.STATE_CHANGE"/>

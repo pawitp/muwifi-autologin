@@ -61,8 +61,8 @@ public class MuWifiLogin {
 		} catch (IOException e) {
 			Log.v(TAG, "Login failed: IOException");
 			
-			Intent notificationIntent = new Intent(mContext, ErrorTextView.class);
-			notificationIntent.putExtra(ErrorTextView.EXTRA_CONTENT, e.toString());
+			Intent notificationIntent = new Intent(mContext, IOErrorView.class);
+			notificationIntent.putExtra(IOErrorView.EXTRA_CONTENT, e);
 			createErrorNotification(notificationIntent);
 		} catch (NullPointerException e) {
 			// a bug in HttpClient library
