@@ -33,7 +33,7 @@ public class MuWifiClient {
 	static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
 	static final int CONNECTION_TIMEOUT = 2000;
 	static final int SOCKET_TIMEOUT = 2000;
-	static final int RETRY_COUNT = 3;
+	static final int RETRY_COUNT = 2;
 	
 	private String mUsername;
 	private String mPassword;
