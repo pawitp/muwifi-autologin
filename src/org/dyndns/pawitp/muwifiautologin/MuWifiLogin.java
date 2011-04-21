@@ -57,21 +57,20 @@ public class MuWifiLogin {
 			
 			Intent notificationIntent = new Intent(mContext, ErrorWebView.class);
 			notificationIntent.putExtra(ErrorWebView.EXTRA_CONTENT, e.getMessage());
-			createErrorNotification(notificationIntent);
+			createErrorNotification(notificationIntent, mContext.getString(R.string.notify_login_error_text));
 		} catch (IOException e) {
 			Log.v(TAG, "Login failed: IOException");
 			
 			Intent notificationIntent = new Intent(mContext, IOErrorView.class);
 			notificationIntent.putExtra(IOErrorView.EXTRA_CONTENT, e);
-			createErrorNotification(notificationIntent);
+			createErrorNotification(notificationIntent, mContext.getString(R.string.notify_login_error_text));
 		} catch (NullPointerException e) {
 			// a bug in HttpClient library
 			// thrown when there is a connection failure when handling a redirect
 			Log.v(TAG, "Login failed: NullPointerException");
+			Log.v(TAG, Utils.stackTraceToString(e));
 			
-			Intent notificationIntent = new Intent(mContext, ErrorTextView.class);
-			notificationIntent.putExtra(ErrorTextView.EXTRA_CONTENT, e.toString());
-			createErrorNotification(notificationIntent);
+			createErrorNotification(new Intent(), mContext.getString(R.string.notify_login_error_null_exception_text));
 		} finally {
 			mNotifMan.cancel(LOGIN_ONGOING_ID);
 		}
@@ -83,13 +82,13 @@ public class MuWifiLogin {
 		mNotifMan.notify(LOGIN_ONGOING_ID, mNotification);
 	}
 	
-	private void createErrorNotification(Intent notificationIntent) {
+	private void createErrorNotification(Intent notificationIntent, String errorText) {
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 		
 		Notification notification = new Notification(R.drawable.ic_stat_notify_key, mContext.getString(R.string.ticker_login_error), System.currentTimeMillis());
-		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notify_login_error_title), mContext.getString(R.string.notify_login_error_text), contentIntent);
+		notification.setLatestEventInfo(mContext, mContext.getString(R.string.notify_login_error_title), errorText, contentIntent);
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
 		if (mPrefs.getBoolean(Preferences.KEY_ERROR_NOTIFY_SOUND, false)) {
