@@ -18,7 +18,9 @@
 	<string name="pref_error_notify_deliminator">,\u0020</string> <!-- A non-encoded trailing space will be removed -->
 	<string name="pref_about">About</string>
 	<string name="pref_version_summary">Version %s</string>
-	<string name="pref_author">Author</string>
+	<string name="pref_website">Visit Website</string>
+	<string name="pref_website_summary">Usage and troubleshooting</string>
+	<string name="pref_author">Contact Author</string>
 	<string name="pref_author_summary">pawitp @ MUICT</string>
 	<string name="no_login_required">No login required.</string>
 	<string name="login_successful">Automatic login to MU-WiFi successful.</string>

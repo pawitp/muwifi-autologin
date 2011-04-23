@@ -39,7 +39,12 @@
 			android:key="version" android:title="@string/app_name"
 			android:summary="@string/pref_version_summary"/>
 		<Preference
+			android:summary="@string/pref_website_summary"
+			android:key="website"
+			android:title="@string/pref_website"/>
+		<Preference
 			android:summary="@string/pref_author_summary"
+			android:key="author"
 			android:title="@string/pref_author"/>
 	</PreferenceCategory>
 </PreferenceScreen>

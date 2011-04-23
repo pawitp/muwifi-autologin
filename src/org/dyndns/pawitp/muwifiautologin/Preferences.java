@@ -3,9 +3,11 @@ package org.dyndns.pawitp.muwifiautologin;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -17,10 +19,17 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	static final String KEY_USERNAME = "username";
 	static final String KEY_PASSWORD = "password";
 	static final String KEY_VERSION = "version";
+	static final String KEY_WEBSITE = "website";
+	static final String KEY_AUTHOR = "author";
 	static final String KEY_ERROR_NOTIFY = "error_notify";
 	static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
 	static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
 	static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
+	
+	static final String EMAIL_TYPE = "message/rfc822";
+	static final String EMAIL_AUTHOR = "p.pawit@gmail.com";
+	static final String EMAIL_SUBJECT = "[MU-WiFi Autologin] ";
+	static final String WEBSITE_URL = "http://pawitp.dats.us/muwifi-autologin/";
 	
     /** Called when the activity is first created. */
     @Override
@@ -45,6 +54,30 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			public boolean onPreferenceClick(Preference preference) {
 				MuWifiLogin login = new MuWifiLogin(Preferences.this, getPreferenceManager().getSharedPreferences());
 				login.login();
+				return true;
+			}
+		});
+		
+		// Visit website callback
+		findPreference(KEY_WEBSITE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(WEBSITE_URL));
+		        startActivity(i);
+				return true;
+			}
+		});
+		
+		// Contact author callback
+		findPreference(KEY_AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType(EMAIL_TYPE);
+				i.putExtra(Intent.EXTRA_EMAIL, new String[] {EMAIL_AUTHOR});
+				i.putExtra(Intent.EXTRA_SUBJECT, EMAIL_SUBJECT);
+				
+		        startActivity(Intent.createChooser(i, "Test"));
 				return true;
 			}
 		});
