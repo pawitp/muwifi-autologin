@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,9 +23,9 @@ public class MuWifiLogin {
 	private NotificationManager mNotifMan;
 	private Notification mNotification;
 
-	public MuWifiLogin(Context context, SharedPreferences prefs) {
+	public MuWifiLogin(Context context) {
 		mContext = context;
-		mPrefs = prefs;
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mNotifMan = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		mNotification = new Notification(R.drawable.ic_stat_notify_key, null, System.currentTimeMillis());

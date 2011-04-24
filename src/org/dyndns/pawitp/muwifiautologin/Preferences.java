@@ -48,7 +48,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		findPreference(KEY_LOGIN_NOW).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				MuWifiLogin login = new MuWifiLogin(Preferences.this, getPreferenceManager().getSharedPreferences());
+				MuWifiLogin login = new MuWifiLogin(Preferences.this);
 				login.login();
 				return true;
 			}
