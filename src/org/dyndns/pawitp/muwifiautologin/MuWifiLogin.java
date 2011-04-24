@@ -38,7 +38,8 @@ public class MuWifiLogin extends IntentService {
 		mNotifMan = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		mNotification = new Notification(R.drawable.ic_stat_notify_key, null, System.currentTimeMillis());
-		mNotification.flags = Notification.FLAG_ONGOING_EVENT;
+		updateOngoingNotification(null, false); // Foreground service requires a valid notification
+		startForeground(LOGIN_ONGOING_ID, mNotification); // Stopped automatically when onHandleIntent returns
 	}
 
 	@Override
@@ -48,11 +49,11 @@ public class MuWifiLogin extends IntentService {
 		MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 		
 		try {
-			updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement));
+			updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
 			if (loginClient.loginRequired()) {
 				Log.v(TAG, "Login required");
 				
-				updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in));
+				updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
 				loginClient.login();
 				
 				createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
@@ -82,15 +83,16 @@ public class MuWifiLogin extends IntentService {
 			Log.v(TAG, Utils.stackTraceToString(e));
 			
 			createErrorNotification(new Intent(), getString(R.string.notify_login_error_null_exception_text));
-		} finally {
-			mNotifMan.cancel(LOGIN_ONGOING_ID);
 		}
 	}
 	
-	private void updateOngoingNotification(String message) {
+	private void updateOngoingNotification(String message, boolean notify) {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent() , 0);
 		mNotification.setLatestEventInfo(this, getString(R.string.notify_login_ongoing_title), message, contentIntent);
-		mNotifMan.notify(LOGIN_ONGOING_ID, mNotification);
+		
+		if (notify) {
+			mNotifMan.notify(LOGIN_ONGOING_ID, mNotification);
+		}
 	}
 	
 	private void createErrorNotification(Intent notificationIntent, String errorText) {
