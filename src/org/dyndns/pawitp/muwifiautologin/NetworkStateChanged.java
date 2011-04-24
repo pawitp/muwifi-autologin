@@ -36,8 +36,8 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		
 		Log.v(TAG, "Connected to the correct network");
 		
-		MuWifiLogin login = new MuWifiLogin(context);
-		login.login();
+		Intent i = new Intent(context, MuWifiLogin.class);
+		context.startService(i);
 	}
 
 }

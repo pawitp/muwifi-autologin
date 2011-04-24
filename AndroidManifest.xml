@@ -18,6 +18,7 @@
 	    		<action android:name="android.net.wifi.STATE_CHANGE"/>
 	    	</intent-filter>
 		</receiver>
+	    <service android:name=".MuWifiLogin"></service>
 	</application>
 
 	<uses-sdk android:minSdkVersion="7"></uses-sdk>
