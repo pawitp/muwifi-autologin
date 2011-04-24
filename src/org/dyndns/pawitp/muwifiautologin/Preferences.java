@@ -25,6 +25,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
 	static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
 	
+	static final String MARKET_PREFIX = "market://details?id=";
 	static final String EMAIL_TYPE = "message/rfc822";
 	static final String EMAIL_AUTHOR = "p.pawit@gmail.com";
 	static final String EMAIL_SUBJECT = "[MU-WiFi Autologin] ";
@@ -49,6 +50,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			public boolean onPreferenceClick(Preference preference) {
 				MuWifiLogin login = new MuWifiLogin(Preferences.this, getPreferenceManager().getSharedPreferences());
 				login.login();
+				return true;
+			}
+		});
+		
+		// Version (visit android market) callback
+		findPreference(KEY_VERSION).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_PREFIX + getPackageName()));
+		        startActivity(i);
 				return true;
 			}
 		});
