@@ -6,7 +6,6 @@ import java.util.Iterator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -41,12 +40,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         updateErrorNotificationSummary();
         
         // Set version number
-		try {
-			String versionSummary = String.format(getString(R.string.pref_version_summary), getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-			findPreference(KEY_VERSION).setSummary(versionSummary);
-		} catch (NameNotFoundException e) {
-			// kind of impossible
-		}
+		String versionSummary = String.format(getString(R.string.pref_version_summary), Utils.getVersionName(this));
+		findPreference(KEY_VERSION).setSummary(versionSummary);
 		
 		// Login now callback
 		findPreference(KEY_LOGIN_NOW).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
