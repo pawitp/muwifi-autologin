@@ -1,6 +1,7 @@
 package org.dyndns.pawitp.muwifiautologin;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -51,14 +52,21 @@ public class MuWifiLogin extends IntentService {
 		try {
 			updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
 			if (loginClient.loginRequired()) {
-				Log.v(TAG, "Login required");
-				
-				updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
-				loginClient.login();
-				
-				createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
-				
-				Log.v(TAG, "Login successful");
+				try {
+					Log.v(TAG, "Login required");
+					
+					updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
+					loginClient.login();
+					createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
+					
+					Log.v(TAG, "Login successful");
+				} catch (SocketTimeoutException e) {
+					// A socket timeout here means invalid crendentials!
+					Log.v(TAG, "Invalid credentials");
+					
+					Intent notificationIntent = new Intent(this, Preferences.class);
+					createErrorNotification(notificationIntent, getString(R.string.notify_login_error_invalid_credentials_text));
+				}
 			} else {
 				createToastNotification(R.string.no_login_required, Toast.LENGTH_SHORT);
 				

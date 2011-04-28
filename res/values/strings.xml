@@ -31,7 +31,8 @@
 	<string name="notify_login_error_title">Unable to login to MU-WiFi</string>
 	<string name="notify_login_error_text">Click to view error.</string>
 	<string name="notify_login_error_null_exception_text">Connection problem.</string>
+	<string name="notify_login_error_invalid_credentials_text">Invalid username or password.</string>
 	<string name="io_error_title">An IO error has occurred.</string>
-	<string name="io_error_description">An IO error may be caused by a bad connection to MU-WiFi or an invalid credential. Please check your username and password and try again.</string>
+	<string name="io_error_description">An IO error may be caused by a bad connection to MU-WiFi.</string>
 	<string name="io_error_stack_trace">Stack Trace:</string>
 </resources>
