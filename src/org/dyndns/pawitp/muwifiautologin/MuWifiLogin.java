@@ -83,14 +83,14 @@ public class MuWifiLogin extends IntentService {
 			
 			Intent notificationIntent = new Intent(this, IOErrorView.class);
 			notificationIntent.putExtra(IOErrorView.EXTRA_CONTENT, Utils.stackTraceToString(e));
-			createErrorNotification(notificationIntent, getString(R.string.notify_login_error_text));
+			createErrorNotification(notificationIntent, getString(R.string.notify_login_error_connection_problem_text));
 		} catch (NullPointerException e) {
 			// a bug in HttpClient library
 			// thrown when there is a connection failure when handling a redirect
 			Log.v(TAG, "Login failed: NullPointerException");
 			Log.v(TAG, Utils.stackTraceToString(e));
 			
-			createErrorNotification(new Intent(), getString(R.string.notify_login_error_null_exception_text));
+			createErrorNotification(new Intent(), getString(R.string.notify_login_error_connection_problem_text));
 		}
 	}
 	
