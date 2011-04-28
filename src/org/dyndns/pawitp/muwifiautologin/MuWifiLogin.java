@@ -98,7 +98,7 @@ public class MuWifiLogin extends IntentService {
 	private void createErrorNotification(Intent notificationIntent, String errorText) {
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Notification notification = new Notification(R.drawable.ic_stat_notify_key, getString(R.string.ticker_login_error), System.currentTimeMillis());
 		notification.setLatestEventInfo(this, getString(R.string.notify_login_error_title), errorText, contentIntent);
