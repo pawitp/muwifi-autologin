@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -104,6 +105,13 @@ public class MuWifiLogin extends IntentService {
 	}
 	
 	private void createErrorNotification(Intent notificationIntent, String errorText) {
+		
+		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		if (!wifi.isWifiEnabled()) {
+			// Don't show errors if wifi is disabled
+			return;
+		}
+		
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
