@@ -20,13 +20,13 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	static final String KEY_ENABLED = "enabled";
 	static final String KEY_USERNAME = "username";
 	static final String KEY_PASSWORD = "password";
-	static final String KEY_VERSION = "version";
-	static final String KEY_WEBSITE = "website";
-	static final String KEY_AUTHOR = "author";
 	static final String KEY_ERROR_NOTIFY = "error_notify";
 	static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
 	static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
 	static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
+	static final String KEY_VERSION = "version";
+	static final String KEY_WEBSITE = "website";
+	static final String KEY_AUTHOR = "author";
 	
 	static final String MARKET_PREFIX = "market://details?id=";
 	static final String EMAIL_TYPE = "message/rfc822";
@@ -92,7 +92,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				i.putExtra(Intent.EXTRA_EMAIL, new String[] {EMAIL_AUTHOR});
 				i.putExtra(Intent.EXTRA_SUBJECT, EMAIL_SUBJECT);
 				
-		        startActivity(Intent.createChooser(i, "Test"));
+		        startActivity(Intent.createChooser(i, ""));
 				return true;
 			}
 		});
