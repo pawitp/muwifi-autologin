@@ -32,6 +32,12 @@
 				android:title="@string/pref_error_notify_lights"
 				android:defaultValue="true"/>
 		</PreferenceScreen>
+		<ListPreference
+			android:title="@string/pref_language_title"
+			android:key="language"
+			android:entries="@array/languages"
+			android:entryValues="@array/languages_values"
+			android:defaultValue="default"/>
 	</PreferenceCategory>
 	
 	<PreferenceCategory android:title="@string/pref_about">

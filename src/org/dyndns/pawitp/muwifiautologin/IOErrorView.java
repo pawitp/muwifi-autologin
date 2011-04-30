@@ -11,6 +11,7 @@ public class IOErrorView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.loadLocale(this);
 		setContentView(R.layout.io_error);
 		
 		// Set stack trace

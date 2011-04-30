@@ -10,6 +10,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.widget.BaseAdapter;
@@ -24,10 +25,12 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
 	static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
 	static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
+	static final String KEY_LANGUAGE = "language";
 	static final String KEY_VERSION = "version";
 	static final String KEY_WEBSITE = "website";
 	static final String KEY_AUTHOR = "author";
 	
+	static final String LANGUAGE_DEFAULT = "default";
 	static final String MARKET_PREFIX = "market://details?id=";
 	static final String EMAIL_TYPE = "message/rfc822";
 	static final String EMAIL_AUTHOR = "p.pawit@gmail.com";
@@ -38,10 +41,12 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.loadLocale(this);
         addPreferencesFromResource(R.xml.preferences);
         
         updateUsernameSummary();
         updateErrorNotificationSummary();
+        updateLanguageSummary();
         
         // Set version number
 		String versionSummary = String.format(getString(R.string.pref_version_summary), Utils.getVersionName(this));
@@ -124,6 +129,17 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			updateErrorNotificationSummary();
 			((BaseAdapter) getPreferenceScreen().getRootAdapter()).notifyDataSetChanged(); // force update parent screen
 		}
+		else if (key.equals(KEY_LANGUAGE)) {
+			updateLanguageSummary();
+			
+			// WARNING: restarting the activity, don't do anything after this
+			Intent intent = getIntent();
+			intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			finish();
+			overridePendingTransition(0, 0);
+			startActivity(intent);
+			overridePendingTransition(0, 0);
+		}
 	}
 	
 	private void updateUsernameSummary() {
@@ -166,5 +182,10 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			
 			findPreference(KEY_ERROR_NOTIFY).setSummary(sb);
 		}
+	}
+	
+	private void updateLanguageSummary() {
+		ListPreference listPref = (ListPreference) findPreference(KEY_LANGUAGE);
+		listPref.setSummary(listPref.getEntry());
 	}
 }

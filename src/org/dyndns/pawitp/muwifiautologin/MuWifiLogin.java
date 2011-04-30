@@ -34,6 +34,7 @@ public class MuWifiLogin extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Utils.loadLocale(this);
 		
 		mHandler = new Handler();
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);

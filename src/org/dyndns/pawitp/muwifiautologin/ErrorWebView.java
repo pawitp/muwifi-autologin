@@ -11,6 +11,7 @@ public class ErrorWebView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.loadLocale(this);
 		
 		WebView webview = new WebView(this);
 		webview.getSettings().setBuiltInZoomControls(true);
