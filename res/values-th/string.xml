@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>   
+	<string name="pref_login_now">เข้าสู่ระบบเดี๋ยวนี้!</string>
+	<string name="pref_preferences">การตั้งค่า</string>
+	<string name="pref_username">ชื่อผู้ใช้</string>
+	<string name="pref_username_summary">กดเพื่อเปลี่ยนชื่อผู้ใช้</string>
+	<string name="pref_password">รหัสผ่าน</string>
+	<string name="pref_password_summary">กดเพื่อเปลี่ยนรหัสผ่าน</string>
+	<string name="pref_enabled">เปิดใช้</string>
+	<string name="pref_enabled_summary">เปิดใช้การเข้าสู่ระบบ MU-WiFi โดยอัตโนมัติ</string>
+	<string name="pref_error_notify_title">วิธีการรายงานข้อผิดพลาด</string>
+	<string name="pref_error_notify_sound">เสียง</string>
+	<string name="pref_error_notify_vibrate">การสั่น</string>
+	<string name="pref_error_notify_lights">กระพริบ</string>
+	<string name="pref_error_notify_none">ไม่ใช้</string>
+	<string name="pref_error_notify_deliminator">\u0020</string>
+	<string name="pref_language_title">ภาษา</string>
+	<string name="pref_about">เกี่ยวกับ</string>
+	<string name="pref_version_summary">เวอร์ชั่น %s</string>
+	<string name="pref_website">เว็บไซต์</string>
+	<string name="pref_website_summary">คู่มือการใช้งานและแก้ไขข้อผิดพลาด</string>
+	<string name="pref_author">ติดต่อผู้พัฒนา</string>
+	<string name="wifi_disabled">สัญญาณอินเตอร์เน็ตไร้สายถูกปิดอยู่ เปิดก่อนใช้งาน</string>
+	<string name="no_login_required">เซิฟเวอร์ไม่ร้องขอการเข้าสู่ระบบ</string>
+	<string name="login_successful">การเข้าสู่ระบบสมบูรณ์</string>
+	<string name="ticker_login_error">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
+	<string name="notify_login_ongoing_title">กำลังเข้าสู่ระบบ MU-WiFi...</string>
+	<string name="notify_login_ongoing_text_determine_requirement">ตรวจสอบสถานะการเชื่อมต่อ...</string>
+	<string name="notify_login_ongoing_text_logging_in">กำลังเข้าสู่ระบบ...</string>
+	<string name="notify_login_error_title">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
+	<string name="notify_login_error_text">กดเพื่อดูรายงานความผิดพลาด</string>
+	<string name="notify_login_error_null_exception_text">พบปัญหาการเชื่อมต่อ</string>
+	<string name="notify_login_error_invalid_credentials_text">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
+	<string name="io_error_title">พบข้อผิดพลาดทางเทคนิค IO</string>
+	<string name="io_error_description">ข้อผิดพลาดทางเทคนิค IO อาจเกิดจากคุณภาพสัญญาณต่ำ</string>
+</resources>
