@@ -120,7 +120,10 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(KEY_USERNAME)) {
+		if (key.equals(KEY_ENABLED)) {
+			updateEnabled();
+		}
+		else if (key.equals(KEY_USERNAME)) {
 			updateUsernameSummary();
 		}
 		else if (key.equals(KEY_ERROR_NOTIFY_SOUND)
@@ -140,6 +143,12 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			startActivity(intent);
 			overridePendingTransition(0, 0);
 		}
+	}
+	
+	// Enable / disable the BroadcastReceiver
+	private void updateEnabled() {
+		boolean enabled = getPreferenceManager().getSharedPreferences().getBoolean(KEY_ENABLED, false);
+		Utils.setEnableBroadcastReceiver(this, enabled);
 	}
 	
 	private void updateUsernameSummary() {

@@ -16,6 +16,14 @@ public class NetworkStateChanged extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		// Check preference
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (!prefs.getBoolean(Preferences.KEY_ENABLED, false)) {
+			// Disable the BroadcastReceiver so it isn't called in the future
+			Utils.setEnableBroadcastReceiver(context, false);
+			return;
+		}
+		
 		// Check network connected
 		NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 		if (!netInfo.isConnected()) {
@@ -25,12 +33,6 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		// Check SSID
 		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		if (!wifi.getConnectionInfo().getSSID().equalsIgnoreCase(SSID)) {
-			return;
-		}
-		
-		// Check preference
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (!prefs.getBoolean(Preferences.KEY_ENABLED, false)) {
 			return;
 		}
 		
