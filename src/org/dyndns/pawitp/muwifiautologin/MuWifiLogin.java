@@ -67,7 +67,9 @@ public class MuWifiLogin extends IntentService {
 					Log.v(TAG, "Invalid credentials");
 					
 					Intent notificationIntent = new Intent(this, Preferences.class);
-					createErrorNotification(notificationIntent, getString(R.string.notify_login_error_invalid_credentials_text));
+					notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+					PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+					createErrorNotification(contentIntent, getString(R.string.notify_login_error_invalid_credentials_text));
 				}
 			} else {
 				createToastNotification(R.string.no_login_required, Toast.LENGTH_SHORT);
@@ -75,24 +77,22 @@ public class MuWifiLogin extends IntentService {
 				Log.v(TAG, "No login required");
 			}
 		} catch (LoginException e) {
-			Log.v(TAG, "Login failed");
-			
-			Intent notificationIntent = new Intent(this, ErrorWebView.class);
-			notificationIntent.putExtra(ErrorWebView.EXTRA_CONTENT, e.getMessage());
-			createErrorNotification(notificationIntent, getString(R.string.notify_login_error_text));
+			Log.v(TAG, "Login failed: LoginException");
+			Log.v(TAG, Utils.stackTraceToString(e));
+
+			createRetryNotification();
 		} catch (IOException e) {
 			Log.v(TAG, "Login failed: IOException");
+			Log.v(TAG, Utils.stackTraceToString(e));
 			
-			Intent notificationIntent = new Intent(this, IOErrorView.class);
-			notificationIntent.putExtra(IOErrorView.EXTRA_CONTENT, Utils.stackTraceToString(e));
-			createErrorNotification(notificationIntent, getString(R.string.notify_login_error_connection_problem_text));
+			createRetryNotification();
 		} catch (NullPointerException e) {
 			// a bug in HttpClient library
 			// thrown when there is a connection failure when handling a redirect
 			Log.v(TAG, "Login failed: NullPointerException");
 			Log.v(TAG, Utils.stackTraceToString(e));
 			
-			createErrorNotification(new Intent(), getString(R.string.notify_login_error_connection_problem_text));
+			createRetryNotification();
 		}
 	}
 	
@@ -105,17 +105,18 @@ public class MuWifiLogin extends IntentService {
 		}
 	}
 	
-	private void createErrorNotification(Intent notificationIntent, String errorText) {
-		
+	private void createRetryNotification() {
+		Intent notificationIntent = new Intent(this, MuWifiLogin.class);
+		PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+		createErrorNotification(contentIntent, getString(R.string.notify_login_error_text));
+	}
+	
+	private void createErrorNotification(PendingIntent contentIntent, String errorText) {
 		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if (!wifi.isWifiEnabled()) {
 			// Don't show errors if wifi is disabled
 			return;
 		}
-		
-		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Notification notification = new Notification(R.drawable.ic_stat_notify_key, getString(R.string.ticker_login_error), System.currentTimeMillis());
 		notification.setLatestEventInfo(this, getString(R.string.notify_login_error_title), errorText, contentIntent);

@@ -28,9 +28,6 @@
 	<string name="notify_login_ongoing_text_determine_requirement">ตรวจสอบสถานะการเชื่อมต่อ...</string>
 	<string name="notify_login_ongoing_text_logging_in">กำลังเข้าสู่ระบบ...</string>
 	<string name="notify_login_error_title">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
-	<string name="notify_login_error_text">กดเพื่อดูรายงานความผิดพลาด</string>
-	<string name="notify_login_error_null_exception_text">พบปัญหาการเชื่อมต่อ</string>
+	<string name="notify_login_error_text">กดเพื่อลองอีกครั้ง</string>
 	<string name="notify_login_error_invalid_credentials_text">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
-	<string name="io_error_title">พบข้อผิดพลาดทางเทคนิค IO</string>
-	<string name="io_error_description">ข้อผิดพลาดทางเทคนิค IO อาจเกิดจากคุณภาพสัญญาณต่ำ</string>
 </resources>
