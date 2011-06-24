@@ -32,16 +32,16 @@ public class NetworkStateChanged extends BroadcastReceiver {
 		
 		// Check SSID
 		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		if (wifi == null) {
-			// wifi is sometimes null on strange circumstances
-			// I've experienced it once connecting to a secured network with an invalid password
-			// others have reported this bug through the market
+		try {
+			if (!wifi.getConnectionInfo().getSSID().equalsIgnoreCase(SSID)) {
+				return;
+			}
+		}
+		catch (NullPointerException e) {
+			// So many things can be null here when network is not connected
 			return;
 		}
-		
-		if (!wifi.getConnectionInfo().getSSID().equalsIgnoreCase(SSID)) {
-			return;
-		}
+
 		
 		Log.v(TAG, "Connected to the correct network");
 		
