@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.HttpResponse;
@@ -24,8 +25,6 @@ import org.apache.http.util.EntityUtils;
 public class MuWifiClient {
 
 	// These are not regex
-	static final String REDIRECT_PAGE_PATTERN = "Form used by registered users to login";
-	static final String REDIRECT_PAGE_PATTERN2 = "Please wait.  You will be redirected to the authentication page in 6 seconds";
 	static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
 	
 	static final String FORM_USERNAME = "user";
@@ -76,14 +75,14 @@ public class MuWifiClient {
 	}
 	
 	public boolean loginRequired() throws IOException {
-		HttpGet httpget = new HttpGet("http://www.google.com/");
-		HttpResponse response = mHttpClient.execute(httpget);
-		String strRes = EntityUtils.toString(response.getEntity());
-		if (strRes.contains(REDIRECT_PAGE_PATTERN) || strRes.contains(REDIRECT_PAGE_PATTERN2)) {
-			return true;
-		} else {
-			return false;
+		try {
+			HttpGet httpget = new HttpGet("https://www.google.com/");
+			mHttpClient.execute(httpget);
 		}
+		catch (SSLException e) {
+			return true; // If login is required, the certificate sent will be securelogin.arubanetworks.com
+		}
+		return false;
 	}
 	
 	public void login() throws IOException, LoginException {
