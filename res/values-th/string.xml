@@ -14,6 +14,9 @@
 	<string name="pref_error_notify_lights">กระพริบ</string>
 	<string name="pref_error_notify_none">ไม่ใช้</string>
 	<string name="pref_error_notify_deliminator">\u0020</string>
+	<string name="pref_toast_notify_title">วิธีการรายงานความสำเร็จ</string>
+	<string name="pref_toast_notify_success">เข้าสู่ระบบสำเร็จ</string>
+	<string name="pref_toast_notify_not_required">ไม่ร้องขอการเข้าสู่ระบบ</string>
 	<string name="pref_language_title">ภาษา</string>
 	<string name="pref_about">เกี่ยวกับ</string>
 	<string name="pref_version_summary">เวอร์ชั่น %s</string>

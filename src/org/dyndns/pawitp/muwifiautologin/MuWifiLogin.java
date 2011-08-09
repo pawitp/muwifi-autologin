@@ -59,7 +59,10 @@ public class MuWifiLogin extends IntentService {
 					
 					updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
 					loginClient.login();
-					createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
+					
+					if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_SUCCESS, true)) {
+						createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
+					}
 					
 					Log.v(TAG, "Login successful");
 				} catch (SocketTimeoutException e) {
@@ -72,7 +75,9 @@ public class MuWifiLogin extends IntentService {
 					createErrorNotification(contentIntent, getString(R.string.notify_login_error_invalid_credentials_text));
 				}
 			} else {
-				createToastNotification(R.string.no_login_required, Toast.LENGTH_SHORT);
+				if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_NOT_REQUIRED, true)) {
+					createToastNotification(R.string.no_login_required, Toast.LENGTH_SHORT);
+				}
 				
 				Log.v(TAG, "No login required");
 			}

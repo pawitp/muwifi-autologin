@@ -16,6 +16,9 @@
 	<string name="pref_error_notify_lights">Lights</string>
 	<string name="pref_error_notify_none">None</string>
 	<string name="pref_error_notify_deliminator">,\u0020</string> <!-- A non-encoded trailing space will be removed -->
+	<string name="pref_toast_notify_title">Success Notification</string>
+	<string name="pref_toast_notify_success">Success</string>
+	<string name="pref_toast_notify_not_required">Not Required</string>
 	<string name="pref_language_title">Language</string>
 	<string name="pref_about">About</string>
 	<string name="pref_version_summary">Version %s</string>

@@ -1,6 +1,7 @@
 package org.dyndns.pawitp.muwifiautologin;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import android.content.Context;
@@ -25,6 +26,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
 	static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
 	static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
+	static final String KEY_TOAST_NOTIFY = "toast_notify";
+	static final String KEY_TOAST_NOTIFY_SUCCESS = "toast_notify_success";
+	static final String KEY_TOAST_NOTIFY_NOT_REQUIRED = "toast_notify_not_required";
 	static final String KEY_LANGUAGE = "language";
 	static final String KEY_VERSION = "version";
 	static final String KEY_WEBSITE = "website";
@@ -46,6 +50,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         
         updateUsernameSummary();
         updateErrorNotificationSummary();
+        updateToastNotificationSummary();
         updateLanguageSummary();
         
         // Set version number
@@ -132,6 +137,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			updateErrorNotificationSummary();
 			((BaseAdapter) getPreferenceScreen().getRootAdapter()).notifyDataSetChanged(); // force update parent screen
 		}
+		else if (key.equals(KEY_TOAST_NOTIFY_SUCCESS)
+				|| key.equals(KEY_TOAST_NOTIFY_NOT_REQUIRED)) {
+			updateToastNotificationSummary();
+			((BaseAdapter) getPreferenceScreen().getRootAdapter()).notifyDataSetChanged(); // force update parent screen
+		}
 		else if (key.equals(KEY_LANGUAGE)) {
 			updateLanguageSummary();
 			
@@ -180,21 +190,46 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			findPreference(KEY_ERROR_NOTIFY).setSummary(R.string.pref_error_notify_none);
 		}
 		else {
-			StringBuilder sb = new StringBuilder();
-			Iterator<String> iter = methods.iterator();
-			
-			sb.append(iter.next());
-			while (iter.hasNext()) {
-				sb.append(getString(R.string.pref_error_notify_deliminator));
-				sb.append(iter.next());
-			}
-			
-			findPreference(KEY_ERROR_NOTIFY).setSummary(sb);
+			String summaryStr = join(methods, getString(R.string.pref_error_notify_deliminator));
+			findPreference(KEY_ERROR_NOTIFY).setSummary(summaryStr);
+		}
+	}
+	
+	private void updateToastNotificationSummary() {
+		ArrayList<String> methods = new ArrayList<String>();
+		
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		
+		if (prefs.getBoolean(KEY_TOAST_NOTIFY_SUCCESS, true)) {
+			methods.add(getString(R.string.pref_toast_notify_success));
+		}
+		if (prefs.getBoolean(KEY_TOAST_NOTIFY_NOT_REQUIRED, true)) {
+			methods.add(getString(R.string.pref_toast_notify_not_required));
+		}
+		
+		if (methods.size() == 0) {
+			findPreference(KEY_TOAST_NOTIFY).setSummary(R.string.pref_error_notify_none);
+		}
+		else {
+			String summaryStr = join(methods, getString(R.string.pref_error_notify_deliminator));
+			findPreference(KEY_TOAST_NOTIFY).setSummary(summaryStr);
 		}
 	}
 	
 	private void updateLanguageSummary() {
 		ListPreference listPref = (ListPreference) findPreference(KEY_LANGUAGE);
 		listPref.setSummary(listPref.getEntry());
+	}
+	
+	private static String join(Collection<String> col, String deliminator) {
+		StringBuilder sb = new StringBuilder();
+		Iterator<String> iter = col.iterator();
+		
+		sb.append(iter.next());
+		while (iter.hasNext()) {
+			sb.append(deliminator);
+			sb.append(iter.next());
+		}
+		return sb.toString();
 	}
 }

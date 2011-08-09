@@ -32,6 +32,18 @@
 				android:title="@string/pref_error_notify_lights"
 				android:defaultValue="true"/>
 		</PreferenceScreen>
+		<PreferenceScreen
+			android:title="@string/pref_toast_notify_title"
+			android:key="toast_notify">
+			<CheckBoxPreference
+				android:key="toast_notify_success"
+				android:title="@string/pref_toast_notify_success"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="toast_notify_not_required"
+				android:title="@string/pref_toast_notify_not_required"
+				android:defaultValue="true"/>
+		</PreferenceScreen>
 		<ListPreference
 			android:title="@string/pref_language_title"
 			android:key="language"
