@@ -25,7 +25,7 @@
 	<string name="pref_website">Visit Website</string>
 	<string name="pref_website_summary">Usage and troubleshooting</string>
 	<string name="pref_author">Contact Author</string>
-	<string name="pref_author_summary">pawitp @ MUICT</string>
+	<string name="pref_author_summary">pawitp @ MUICT9</string>
 	<string name="wifi_disabled">WiFi needs to be enabled to use autologin.</string>
 	<string name="no_login_required">No login required.</string>
 	<string name="login_successful">Automatic login to MU-WiFi successful.</string>
