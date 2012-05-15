@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>   
+<resources>
+    <string name="app_name">MU-WiFi Autologin</string>
 	<string name="pref_login_now">เข้าสู่ระบบเดี๋ยวนี้!</string>
 	<string name="pref_logout_now">ออกจากระบบเดี๋ยวนี้!</string>
 	<string name="pref_preferences">การตั้งค่า</string>
@@ -24,6 +25,7 @@
 	<string name="pref_website">เว็บไซต์</string>
 	<string name="pref_website_summary">คู่มือการใช้งานและแก้ไขข้อผิดพลาด</string>
 	<string name="pref_author">ติดต่อผู้พัฒนา</string>
+	<string name="pref_author_summary">pawitp @ MUICT9</string>
 	<string name="wifi_disabled">สัญญาณอินเตอร์เน็ตไร้สายถูกปิดอยู่ เปิดก่อนใช้งาน</string>
 	<string name="no_login_required">เซิฟเวอร์ไม่ร้องขอการเข้าสู่ระบบ</string>
 	<string name="login_successful">การเข้าสู่ระบบสมบูรณ์</string>

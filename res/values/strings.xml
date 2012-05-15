@@ -11,7 +11,6 @@
 	<string name="pref_enabled">Enabled</string>
 	<string name="pref_enabled_summary">Enable autologin to MU-WiFi</string>
 	<string name="pref_error_notify_title">Error Notification</string>
-	<string name="pref_error_notify_summary">How you are notified of errors</string>
 	<string name="pref_error_notify_sound">Sound</string>
 	<string name="pref_error_notify_vibrate">Vibration</string>
 	<string name="pref_error_notify_lights">Lights</string>
