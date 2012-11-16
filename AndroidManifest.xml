@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.dyndns.pawitp.muwifiautologin"
-      android:versionCode="17" android:versionName="0.4.10">
+      android:versionCode="18" android:versionName="0.4.11">
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"></uses-sdk>
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
