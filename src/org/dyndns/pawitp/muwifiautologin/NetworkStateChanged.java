@@ -34,11 +34,18 @@ public class NetworkStateChanged extends BroadcastReceiver {
         }
 
         // Check SSID
-        String ssid = netInfo.getExtraInfo();
-        Log.d(TAG, "onReceive: SSID = " + ssid);
-        if (!ssid.equalsIgnoreCase(SSID) && !ssid.equalsIgnoreCase(SSID2)) {
-            Log.d(TAG, "Invalid SSID");
-            return;
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        try {
+            String ssid = wifi.getConnectionInfo().getSSID();
+            Log.d(TAG, "ssid = " + ssid);
+            if (!SSID.equalsIgnoreCase(ssid) && !SSID2.equalsIgnoreCase(ssid)) {
+                Log.d(TAG, "Invalid SSID");
+                return;
+            }
+        }
+        catch (NullPointerException e) {
+            // So many things can be null here when network is not connected
+            Log.d(TAG, "Exception", e);
         }
 
         Log.v(TAG, "Connected to the correct network");
