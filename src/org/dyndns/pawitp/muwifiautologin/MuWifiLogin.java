@@ -13,7 +13,11 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.client.methods.HttpGet;
+
 import java.io.IOException;
+
+import javax.net.ssl.SSLException;
 
 public class MuWifiLogin extends IntentService {
 
@@ -51,19 +55,26 @@ public class MuWifiLogin extends IntentService {
 
         boolean isLogout = intent.getBooleanExtra(EXTRA_LOGOUT, false);
 
-        ArubaClient loginClient = new ArubaClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
-
         try {
             if (isLogout) {
                 Log.v(TAG, "Logging out");
                 updateOngoingNotification(getString(R.string.notify_logout_ongoing_text), true);
+
+                // Currently, only ArubaClient supports logout
+                ArubaClient loginClient = new ArubaClient();
                 loginClient.logout();
+
                 createToastNotification(R.string.logout_successful, Toast.LENGTH_SHORT);
                 Log.v(TAG, "Logout successful");
             } else {
                 updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
-                if (loginClient.loginRequired()) {
+                if (loginRequired()) {
                     Log.v(TAG, "Login required");
+
+                    // TOOO: Detect client
+                    String username = mPrefs.getString(Preferences.KEY_USERNAME, null);
+                    String password = mPrefs.getString(Preferences.KEY_PASSWORD, null);
+                    ArubaClient loginClient = new ArubaClient(username, password);
 
                     updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
                     loginClient.login();
@@ -153,4 +164,16 @@ public class MuWifiLogin extends IntentService {
             }
         });
     }
+
+    private boolean loginRequired() throws IOException {
+        try {
+            HttpGet httpget = new HttpGet("https://www.google.com/");
+            Utils.createHttpClient().execute(httpget);
+        }
+        catch (SSLException e) {
+            return true; // If login is required, the certificate sent will be securelogin.arubanetworks.com
+        }
+        return false;
+    }
+
 }

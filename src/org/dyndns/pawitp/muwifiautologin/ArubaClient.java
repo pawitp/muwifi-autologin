@@ -8,16 +8,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.SSLException;
 
 // Client for MU-WiFi system running on Aruba Networks
 public class ArubaClient {
@@ -30,35 +26,19 @@ public class ArubaClient {
     static final String FORM_PASSWORD = "password";
     static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
     static final String LOGOUT_URL = "https://securelogin.arubanetworks.com/auth/logout.html";
-    static final int CONNECTION_TIMEOUT = 2000;
-    static final int SOCKET_TIMEOUT = 2000;
 
     private String mUsername;
     private String mPassword;
     private DefaultHttpClient mHttpClient;
 
+    public ArubaClient() {
+        mHttpClient = Utils.createHttpClient();
+    }
+
     public ArubaClient(String username, String password) {
         mUsername = username;
         mPassword = password;
-
-        mHttpClient = new DefaultHttpClient();
-        HttpParams params = mHttpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
-
-        // Also retry POST requests (normally not retried because it is not regarded idempotent)
-        mHttpClient.setHttpRequestRetryHandler(new PostRetryHandler());
-    }
-
-    public boolean loginRequired() throws IOException {
-        try {
-            HttpGet httpget = new HttpGet("https://www.google.com/");
-            mHttpClient.execute(httpget);
-        }
-        catch (SSLException e) {
-            return true; // If login is required, the certificate sent will be securelogin.arubanetworks.com
-        }
-        return false;
+        mHttpClient = Utils.createHttpClient();
     }
 
     public void login() throws IOException, LoginException {
