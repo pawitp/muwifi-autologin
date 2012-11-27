@@ -38,5 +38,4 @@
 	<string name="notify_login_error_title">Unable to login to MU-WiFi</string>
 	<string name="notify_logout_error_title">Unable to logout from MU-WiFi</string>
 	<string name="notify_login_error_text">Click to retry.</string>
-	<string name="notify_login_error_invalid_credentials_text">Invalid username or password.</string>
 </resources>

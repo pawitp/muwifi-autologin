@@ -38,5 +38,4 @@
 	<string name="notify_login_error_title">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
 	<string name="notify_logout_error_title">ไม่สามารถออกจากระบบ MU-WiFi ได้</string>
 	<string name="notify_login_error_text">กดเพื่อลองอีกครั้ง</string>
-	<string name="notify_login_error_invalid_credentials_text">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
 </resources>

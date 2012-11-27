@@ -1,8 +1,5 @@
 package org.dyndns.pawitp.muwifiautologin;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,6 +12,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class MuWifiLogin extends IntentService {
 
@@ -52,7 +51,7 @@ public class MuWifiLogin extends IntentService {
 
         boolean isLogout = intent.getBooleanExtra(EXTRA_LOGOUT, false);
 
-        MuWifiClient loginClient = new MuWifiClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
+        ArubaClient loginClient = new ArubaClient(mPrefs.getString(Preferences.KEY_USERNAME, null), mPrefs.getString(Preferences.KEY_PASSWORD, null));
 
         try {
             if (isLogout) {
@@ -64,26 +63,16 @@ public class MuWifiLogin extends IntentService {
             } else {
                 updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
                 if (loginClient.loginRequired()) {
-                    try {
-                        Log.v(TAG, "Login required");
+                    Log.v(TAG, "Login required");
 
-                        updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
-                        loginClient.login();
+                    updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
+                    loginClient.login();
 
-                        if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_SUCCESS, true)) {
-                            createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
-                        }
-
-                        Log.v(TAG, "Login successful");
-                    } catch (SocketTimeoutException e) {
-                        // A socket timeout here means invalid credentials!
-                        Log.v(TAG, "Invalid credentials");
-
-                        Intent notificationIntent = new Intent(this, Preferences.class);
-                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-                        createErrorNotification(contentIntent, getString(R.string.notify_login_error_invalid_credentials_text), isLogout);
+                    if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_SUCCESS, true)) {
+                        createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
                     }
+
+                    Log.v(TAG, "Login successful");
                 } else {
                     if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_NOT_REQUIRED, true)) {
                         createToastNotification(R.string.no_login_required, Toast.LENGTH_SHORT);
