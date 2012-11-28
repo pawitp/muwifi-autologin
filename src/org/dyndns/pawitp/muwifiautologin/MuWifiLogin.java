@@ -164,7 +164,7 @@ public class MuWifiLogin extends IntentService {
         });
     }
 
-    private LoginClient getLoginClient() throws IOException {
+    private LoginClient getLoginClient() throws IOException, LoginException {
         try {
             HttpGet httpget = new HttpGet("https://google.com/");
             Utils.createHttpClient(MySSLSocketFactory.MODE_CHECK_CAPTIVE).execute(httpget);
@@ -177,11 +177,10 @@ public class MuWifiLogin extends IntentService {
             }
             else if (e.getMessage().equals("Cisco")) {
                 Log.v(TAG, "Cisco network");
-                return null; // TODO
+                return new CiscoClient();
             }
             else {
-                // Unknown network, TODO
-                return null;
+                throw new LoginException("Unsupported Network");
             }
         }
     }
