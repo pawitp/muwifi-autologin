@@ -8,12 +8,20 @@ import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.security.KeyStore;
 import java.util.Locale;
 
 public class Utils {
@@ -61,15 +69,35 @@ public class Utils {
         context.getPackageManager().setComponentEnabledSetting(receiver, state, PackageManager.DONT_KILL_APP);
     }
 
-    public static DefaultHttpClient createHttpClient() {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+    public static DefaultHttpClient createHttpClient(int sslMode) {
+        // SSL stuff
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
 
-        // Also retry POST requests (normally not retried because it is not regarded idempotent)
-        httpClient.setHttpRequestRetryHandler(new PostRetryHandler());
+            SSLSocketFactory sf = new MySSLSocketFactory(trustStore, sslMode);
+            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-        return httpClient;
+            SchemeRegistry registry = new SchemeRegistry();
+            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            registry.register(new Scheme("https", sf, 443));
+
+            HttpParams params = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+            DefaultHttpClient httpClient = new DefaultHttpClient(ccm, params);
+
+            // Also retry POST requests (normally not retried because it is not regarded idempotent)
+            httpClient.setHttpRequestRetryHandler(new PostRetryHandler());
+
+            return httpClient;
+        }
+        catch (Exception e) {
+            // Too many to handle individually
+            Log.e(TAG, "", e);
+            return null;
+        }
     }
 }

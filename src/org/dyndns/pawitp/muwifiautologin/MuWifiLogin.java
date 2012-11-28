@@ -61,23 +61,22 @@ public class MuWifiLogin extends IntentService {
                 updateOngoingNotification(getString(R.string.notify_logout_ongoing_text), true);
 
                 // Currently, only ArubaClient supports logout
-                ArubaClient loginClient = new ArubaClient();
+                LoginClient loginClient = new ArubaClient();
                 loginClient.logout();
 
                 createToastNotification(R.string.logout_successful, Toast.LENGTH_SHORT);
                 Log.v(TAG, "Logout successful");
             } else {
                 updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
-                if (loginRequired()) {
+                LoginClient loginClient = getLoginClient();
+                if (loginClient != null) {
                     Log.v(TAG, "Login required");
 
-                    // TOOO: Detect client
                     String username = mPrefs.getString(Preferences.KEY_USERNAME, null);
                     String password = mPrefs.getString(Preferences.KEY_PASSWORD, null);
-                    ArubaClient loginClient = new ArubaClient(username, password);
 
                     updateOngoingNotification(getString(R.string.notify_login_ongoing_text_logging_in), true);
-                    loginClient.login();
+                    loginClient.login(username, password);
 
                     if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_SUCCESS, true)) {
                         createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
@@ -165,15 +164,26 @@ public class MuWifiLogin extends IntentService {
         });
     }
 
-    private boolean loginRequired() throws IOException {
+    private LoginClient getLoginClient() throws IOException {
         try {
-            HttpGet httpget = new HttpGet("https://www.google.com/");
-            Utils.createHttpClient().execute(httpget);
+            HttpGet httpget = new HttpGet("https://google.com/");
+            Utils.createHttpClient(MySSLSocketFactory.MODE_CHECK_CAPTIVE).execute(httpget);
+            return null; // No login required
         }
         catch (SSLException e) {
-            return true; // If login is required, the certificate sent will be securelogin.arubanetworks.com
+            if (e.getMessage().equals("Aruba")) {
+                Log.v(TAG, "Aruba network");
+                return new ArubaClient();
+            }
+            else if (e.getMessage().equals("Cisco")) {
+                Log.v(TAG, "Cisco network");
+                return null; // TODO
+            }
+            else {
+                // Unknown network, TODO
+                return null;
+            }
         }
-        return false;
     }
 
 }

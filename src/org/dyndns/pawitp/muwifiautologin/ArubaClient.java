@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Client for MU-WiFi system running on Aruba Networks
-public class ArubaClient {
+public class ArubaClient implements LoginClient {
 
     // These are not regex
     static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
@@ -27,25 +27,17 @@ public class ArubaClient {
     static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
     static final String LOGOUT_URL = "https://securelogin.arubanetworks.com/auth/logout.html";
 
-    private String mUsername;
-    private String mPassword;
     private DefaultHttpClient mHttpClient;
 
     public ArubaClient() {
-        mHttpClient = Utils.createHttpClient();
+        mHttpClient = Utils.createHttpClient(MySSLSocketFactory.MODE_TRUST_ALL);
     }
 
-    public ArubaClient(String username, String password) {
-        mUsername = username;
-        mPassword = password;
-        mHttpClient = Utils.createHttpClient();
-    }
-
-    public void login() throws IOException, LoginException {
+    public void login(String username, String password) throws IOException, LoginException {
         try {
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-            formparams.add(new BasicNameValuePair(FORM_USERNAME, mUsername));
-            formparams.add(new BasicNameValuePair(FORM_PASSWORD, mPassword));
+            formparams.add(new BasicNameValuePair(FORM_USERNAME, username));
+            formparams.add(new BasicNameValuePair(FORM_PASSWORD, password));
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             HttpPost httppost = new HttpPost(FORM_URL);
             httppost.setEntity(entity);
