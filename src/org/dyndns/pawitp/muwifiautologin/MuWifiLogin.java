@@ -13,11 +13,11 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-
-import javax.net.ssl.SSLException;
 
 public class MuWifiLogin extends IntentService {
 
@@ -100,13 +100,30 @@ public class MuWifiLogin extends IntentService {
             Log.v(TAG, "Login failed: IOException");
             Log.v(TAG, Utils.stackTraceToString(e));
 
-            createRetryNotification(isLogout);
+            tryConnection(isLogout);
         } catch (NullPointerException e) {
             // a bug in HttpClient library
             // thrown when there is a connection failure when handling a redirect
             Log.v(TAG, "Login failed: NullPointerException");
             Log.v(TAG, Utils.stackTraceToString(e));
 
+            tryConnection(isLogout);
+        }
+    }
+
+    // After a login "failure", we can check if our connection is working or not
+    private void tryConnection(boolean isLogout) {
+        Log.v(TAG, "Trying connection after failure");
+        try {
+            boolean loggedIn = getLoginClient() == null;
+            if ((!loggedIn && !isLogout) || (loggedIn && isLogout)) {
+                createRetryNotification(isLogout);
+            }
+            else {
+                Log.v(TAG, "Connection working");
+            }
+        }
+        catch (Exception e) {
             createRetryNotification(isLogout);
         }
     }
@@ -165,23 +182,25 @@ public class MuWifiLogin extends IntentService {
     }
 
     private LoginClient getLoginClient() throws IOException, LoginException {
-        try {
-            HttpGet httpget = new HttpGet("https://google.com/");
-            Utils.createHttpClient(MySSLSocketFactory.MODE_CHECK_CAPTIVE).execute(httpget);
-            return null; // No login required
+        HttpGet httpget = new HttpGet("http://client3.google.com/generate_204");
+        HttpResponse response = Utils.createHttpClient().execute(httpget);
+
+        if (response.getStatusLine().getStatusCode() == 204) {
+            // We're online! No login required
+            return null;
         }
-        catch (SSLException e) {
-            if (e.getMessage().equals("Aruba")) {
-                Log.v(TAG, "Aruba network");
-                return new ArubaClient();
-            }
-            else if (e.getMessage().equals("Cisco")) {
-                Log.v(TAG, "Cisco network");
-                return new CiscoClient();
-            }
-            else {
-                throw new LoginException("Unsupported Network");
-            }
+
+        String strRes = EntityUtils.toString(response.getEntity());
+        Log.d(TAG, strRes);
+        if (strRes.contains("Welcome to the Cisco wireless network")) {
+            // Cisco authentication
+            Log.v(TAG, "Cisco network");
+            return new CiscoClient();
+        }
+        else {
+            // Assume aruba
+            Log.v(TAG, "Aruba network");
+            return new ArubaClient();
         }
     }
 

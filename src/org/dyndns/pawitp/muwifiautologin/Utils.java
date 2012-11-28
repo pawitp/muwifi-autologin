@@ -69,13 +69,13 @@ public class Utils {
         context.getPackageManager().setComponentEnabledSetting(receiver, state, PackageManager.DONT_KILL_APP);
     }
 
-    public static DefaultHttpClient createHttpClient(int sslMode) {
+    public static DefaultHttpClient createHttpClient() {
         // SSL stuff
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             trustStore.load(null, null);
 
-            SSLSocketFactory sf = new MySSLSocketFactory(trustStore, sslMode);
+            SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
             sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
             SchemeRegistry registry = new SchemeRegistry();

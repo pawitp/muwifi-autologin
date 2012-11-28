@@ -1,5 +1,7 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.util.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -15,6 +17,8 @@ import java.util.List;
 // Client for MU-WiFi system running on Aruba Networks
 public class CiscoClient implements LoginClient {
 
+    private static final String TAG = "CiscoClient";
+
     // These are not regex
     static final String LOGIN_FAIL_PATTERN = "<INPUT TYPE=\"hidden\" NAME=\"err_flag\" SIZE=\"16\" MAXLENGTH=\"15\" VALUE=\"1\">";
 
@@ -25,7 +29,7 @@ public class CiscoClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public CiscoClient() {
-        mHttpClient = Utils.createHttpClient(MySSLSocketFactory.MODE_TRUST_ALL);
+        mHttpClient = Utils.createHttpClient();
     }
 
     public void login(String username, String password) throws IOException, LoginException {
@@ -43,6 +47,8 @@ public class CiscoClient implements LoginClient {
         httppost.setEntity(entity);
         HttpResponse response = mHttpClient.execute(httppost);
         String strRes = EntityUtils.toString(response.getEntity());
+
+        Log.d(TAG, strRes);
 
         if (strRes.contains(LOGIN_FAIL_PATTERN)) {
             // login fail (extracted message from server)

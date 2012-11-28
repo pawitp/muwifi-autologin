@@ -1,5 +1,7 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.util.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +20,8 @@ import java.util.List;
 // Client for MU-WiFi system running on Aruba Networks
 public class ArubaClient implements LoginClient {
 
+    private static final String TAG = "ArubaClient";
+
     // These are not regex
     static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
     static final String LOGOUT_SUCCESSFUL_PATTERN = "Logout Successful";
@@ -30,7 +34,7 @@ public class ArubaClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public ArubaClient() {
-        mHttpClient = Utils.createHttpClient(MySSLSocketFactory.MODE_TRUST_ALL);
+        mHttpClient = Utils.createHttpClient();
     }
 
     public void login(String username, String password) throws IOException, LoginException {
@@ -43,6 +47,8 @@ public class ArubaClient implements LoginClient {
             httppost.setEntity(entity);
             HttpResponse response = mHttpClient.execute(httppost);
             String strRes = EntityUtils.toString(response.getEntity());
+
+            Log.d(TAG, strRes);
 
             if (strRes.contains(LOGIN_SUCCESSFUL_PATTERN)) {
                 // login successful
