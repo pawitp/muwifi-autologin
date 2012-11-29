@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -60,8 +61,7 @@ public class MuWifiLogin extends IntentService {
                 Log.v(TAG, "Logging out");
                 updateOngoingNotification(getString(R.string.notify_logout_ongoing_text), true);
 
-                // Currently, only ArubaClient supports logout
-                LoginClient loginClient = new ArubaClient();
+                LoginClient loginClient = getLogoutClient();
                 loginClient.logout();
 
                 createToastNotification(R.string.logout_successful, Toast.LENGTH_SHORT);
@@ -148,14 +148,16 @@ public class MuWifiLogin extends IntentService {
     }
 
     private void createErrorNotification(PendingIntent contentIntent, String errorText, boolean isLogout) {
+        Log.d(TAG, "createErrorNotification isLogout=" + isLogout);
+
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()) {
             // Don't show errors if wifi is disabled
             return;
         }
 
-        Notification notification = new Notification(R.drawable.ic_stat_notify_key, getString(R.string.ticker_login_error), System.currentTimeMillis());
         int message = isLogout ? R.string.notify_logout_error_title : R.string.notify_login_error_title;
+        Notification notification = new Notification(R.drawable.ic_stat_notify_key, getString(message), System.currentTimeMillis());
         notification.setLatestEventInfo(this, getString(message), errorText, contentIntent);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
 
@@ -192,7 +194,23 @@ public class MuWifiLogin extends IntentService {
 
         String strRes = EntityUtils.toString(response.getEntity());
         Log.d(TAG, strRes);
-        if (strRes.contains("Welcome to the Cisco wireless network")) {
+        if (strRes.contains("https://1.1.1.1/login.html")) {
+            // Cisco authentication
+            Log.v(TAG, "Cisco network");
+            return new CiscoClient();
+        }
+        else {
+            // Assume aruba
+            Log.v(TAG, "Aruba network");
+            return new ArubaClient();
+        }
+    }
+
+    private LoginClient getLogoutClient() throws IOException, LoginException {
+        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        Log.d(TAG, "IP :" + ip);
+        if (ip.startsWith("10.7.")) {
             // Cisco authentication
             Log.v(TAG, "Cisco network");
             return new CiscoClient();

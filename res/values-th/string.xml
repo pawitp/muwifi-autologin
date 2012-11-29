@@ -30,7 +30,6 @@
 	<string name="no_login_required">เซิฟเวอร์ไม่ร้องขอการเข้าสู่ระบบ</string>
 	<string name="login_successful">การเข้าสู่ระบบสมบูรณ์</string>
 	<string name="logout_successful">การออกจากระบบสมบูรณ์</string>
-	<string name="ticker_login_error">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
 	<string name="notify_login_ongoing_title">กำลังเข้าสู่ระบบ MU-WiFi…</string>
 	<string name="notify_login_ongoing_text_determine_requirement">ตรวจสอบสถานะการเชื่อมต่อ…</string>
 	<string name="notify_login_ongoing_text_logging_in">กำลังเข้าสู่ระบบ…</string>

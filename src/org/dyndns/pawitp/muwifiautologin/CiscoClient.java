@@ -21,10 +21,12 @@ public class CiscoClient implements LoginClient {
 
     // These are not regex
     static final String LOGIN_FAIL_PATTERN = "<INPUT TYPE=\"hidden\" NAME=\"err_flag\" SIZE=\"16\" MAXLENGTH=\"15\" VALUE=\"1\">";
+    static final String LOGOUT_SUCCESSFUL_PATTERN = "To complete the log off process and to prevent access";
 
     static final String FORM_USERNAME = "username";
     static final String FORM_PASSWORD = "password";
     static final String FORM_URL = "https://1.1.1.1/login.html";
+    static final String LOGOUT_URL = "https://1.1.1.1/logout.html";
 
     private DefaultHttpClient mHttpClient;
 
@@ -59,7 +61,27 @@ public class CiscoClient implements LoginClient {
     }
 
     public void logout() throws IOException, LoginException {
-        throw new LoginException("Unsupported Operation");
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+
+        // Magic values
+        formparams.add(new BasicNameValuePair("userStatus", "1"));
+        formparams.add(new BasicNameValuePair("err_flag", "0"));
+        formparams.add(new BasicNameValuePair("Logout", "Logout"));
+
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+        HttpPost httppost = new HttpPost(LOGOUT_URL);
+        httppost.setEntity(entity);
+        HttpResponse response = mHttpClient.execute(httppost);
+        String strRes = EntityUtils.toString(response.getEntity());
+
+        Log.d(TAG, strRes);
+
+        if (strRes.contains(LOGOUT_SUCCESSFUL_PATTERN)) {
+            // logout successful
+        } else {
+            // logout fail
+            throw new LoginException("Unexpected reply from server.");
+        }
     }
 
 }

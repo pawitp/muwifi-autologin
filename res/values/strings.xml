@@ -30,7 +30,6 @@
 	<string name="no_login_required">No login required.</string>
 	<string name="login_successful">Automatic login to MU-WiFi successful.</string>
 	<string name="logout_successful">Logout successful.</string>
-	<string name="ticker_login_error">Unable to login to MU-WiFi.</string>
 	<string name="notify_login_ongoing_title">MU-WiFi Autologin</string>
 	<string name="notify_login_ongoing_text_determine_requirement">Determining if login is required…</string>
 	<string name="notify_login_ongoing_text_logging_in">Logging in…</string>
