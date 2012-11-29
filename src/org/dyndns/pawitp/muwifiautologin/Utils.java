@@ -19,8 +19,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.security.KeyStore;
 import java.util.Locale;
 
@@ -30,15 +28,6 @@ public class Utils {
 
     static final int CONNECTION_TIMEOUT = 2000;
     static final int SOCKET_TIMEOUT = 2000;
-
-    public static String stackTraceToString(Exception e) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(os);
-        e.printStackTrace(ps);
-        String ret = os.toString();
-        ps.close();
-        return ret;
-    }
 
     public static String getVersionName(Context context) {
         try {

@@ -92,20 +92,17 @@ public class MuWifiLogin extends IntentService {
                 }
             }
         } catch (LoginException e) {
-            Log.v(TAG, "Login failed: LoginException");
-            Log.v(TAG, Utils.stackTraceToString(e));
+            Log.e(TAG, "Login failed: LoginException", e);
 
             createRetryNotification(isLogout, e.getMessage());
         } catch (IOException e) {
-            Log.v(TAG, "Login failed: IOException");
-            Log.v(TAG, Utils.stackTraceToString(e));
+            Log.e(TAG, "Login failed: IOException", e);
 
             tryConnection(isLogout);
         } catch (NullPointerException e) {
             // a bug in HttpClient library
             // thrown when there is a connection failure when handling a redirect
-            Log.v(TAG, "Login failed: NullPointerException");
-            Log.v(TAG, Utils.stackTraceToString(e));
+            Log.e(TAG, "Login failed: NullPointerException", e);
 
             tryConnection(isLogout);
         }
