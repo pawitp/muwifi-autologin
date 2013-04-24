@@ -12,8 +12,7 @@ import android.util.Log;
 public class NetworkStateChanged extends BroadcastReceiver {
 
     static final String TAG = "NetworkStateChanged";
-    static final String SSID = "MU-WiFi";
-    static final String SSID2 = "\"MU-WiFi\""; // JB 4.2 quotes SSID
+    static final String[] SSID = {"MU-WiFi", "IC-WiFi"};
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,7 +37,15 @@ public class NetworkStateChanged extends BroadcastReceiver {
         try {
             String ssid = wifi.getConnectionInfo().getSSID();
             Log.d(TAG, "ssid = " + ssid);
-            if (!SSID.equalsIgnoreCase(ssid) && !SSID2.equalsIgnoreCase(ssid)) {
+            boolean validSsid = false;
+            for (String checkSsid : SSID) {
+                if (checkSsid.equalsIgnoreCase(ssid) || ("\"" + checkSsid + "\"").equalsIgnoreCase(ssid)) {
+                    // JB 4.2 puts quote around SSID
+                    validSsid = true;
+                    break;
+                }
+            }
+            if (!validSsid) {
                 Log.d(TAG, "Invalid SSID");
                 return;
             }
