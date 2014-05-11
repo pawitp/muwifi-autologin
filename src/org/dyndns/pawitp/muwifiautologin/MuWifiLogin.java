@@ -136,7 +136,8 @@ public class MuWifiLogin extends IntentService {
 
     private void createRetryNotification(boolean isLogout, String text) {
         Intent notificationIntent = new Intent(this, MuWifiLogin.class);
-        PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+        notificationIntent.putExtra(EXTRA_LOGOUT, isLogout);
+        PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         createErrorNotification(contentIntent, text, isLogout);
     }
 
