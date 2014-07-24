@@ -28,8 +28,8 @@ public class ArubaClient implements LoginClient {
 
     static final String FORM_USERNAME = "user";
     static final String FORM_PASSWORD = "password";
-    static final String FORM_URL = "https://securelogin.arubanetworks.com/auth/index.html/u";
-    static final String LOGOUT_URL = "https://securelogin.arubanetworks.com/auth/logout.html";
+    static final String FORM_URL = "https://captiveportal-login.mahidol.ac.th/auth/index.html/u";
+    static final String LOGOUT_URL = "https://captiveportal-login.mahidol.ac.th/auth/logout.html";
 
     private DefaultHttpClient mHttpClient;
 

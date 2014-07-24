@@ -26,8 +26,8 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 
         // Basically a "trust-all" trust manager
         // Cisco-based system uses an invalid certificate
-        // Aruba-based system uses a global certificate for securelogin.arubanetworks.com
-        // which any client has access to anyway, so additional measure is useless.
+        // Aruba-based system uses *.mahidol.ac.th wildcard certificate.
+        // (TODO: Do not ignore validity for Aruba systems)
         TrustManager tm = new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             }
