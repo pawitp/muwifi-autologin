@@ -21,18 +21,6 @@ public class PostRetryHandler implements HttpRequestRetryHandler {
             // Do not retry if over max retry count
             return false;
         }
-        if (exception instanceof UnknownHostException) {
-            // Unknown host
-            return false;
-        }
-        if (exception instanceof ConnectException) {
-            // Connection refused
-            return false;
-        }
-        if (exception instanceof SSLHandshakeException) {
-            // SSL handshake exception
-            return false;
-        }
 
         return true;
     }
