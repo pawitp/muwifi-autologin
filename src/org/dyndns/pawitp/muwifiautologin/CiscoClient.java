@@ -31,7 +31,7 @@ public class CiscoClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public CiscoClient() {
-        mHttpClient = Utils.createHttpClient();
+        mHttpClient = Utils.createHttpClient(false);
     }
 
     public void login(String username, String password) throws IOException, LoginException {

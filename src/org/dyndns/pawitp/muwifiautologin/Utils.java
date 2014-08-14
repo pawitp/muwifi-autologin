@@ -58,25 +58,33 @@ public class Utils {
         context.getPackageManager().setComponentEnabledSetting(receiver, state, PackageManager.DONT_KILL_APP);
     }
 
-    public static DefaultHttpClient createHttpClient() {
+    public static DefaultHttpClient createHttpClient(boolean verifyCert) {
         // SSL stuff
         try {
-            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            trustStore.load(null, null);
-
-            SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-            SchemeRegistry registry = new SchemeRegistry();
-            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-            registry.register(new Scheme("https", sf, 443));
-
             HttpParams params = new BasicHttpParams();
             HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
             HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
 
-            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-            DefaultHttpClient httpClient = new DefaultHttpClient(ccm, params);
+            DefaultHttpClient httpClient;
+
+            if (verifyCert) {
+                // Use default HTTP client
+                httpClient = new DefaultHttpClient();
+            } else {
+                // Create an HTTP client that doesn't verify SSL certificates
+                KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                trustStore.load(null, null);
+
+                SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+                sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+                SchemeRegistry registry = new SchemeRegistry();
+                registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+                registry.register(new Scheme("https", sf, 443));
+
+                ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+                httpClient = new DefaultHttpClient(ccm, params);
+            }
 
             // Also retry POST requests (normally not retried because it is not regarded idempotent)
             httpClient.setHttpRequestRetryHandler(new PostRetryHandler());

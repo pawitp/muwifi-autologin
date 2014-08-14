@@ -183,7 +183,7 @@ public class MuWifiLogin extends IntentService {
 
     private LoginClient getLoginClient() throws IOException, LoginException {
         HttpGet httpget = new HttpGet("http://client3.google.com/generate_204");
-        HttpResponse response = Utils.createHttpClient().execute(httpget);
+        HttpResponse response = Utils.createHttpClient(false).execute(httpget);
 
         if (response.getStatusLine().getStatusCode() == 204) {
             // We're online! No login required

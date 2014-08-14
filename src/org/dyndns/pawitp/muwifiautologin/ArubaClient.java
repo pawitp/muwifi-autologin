@@ -34,7 +34,7 @@ public class ArubaClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public ArubaClient() {
-        mHttpClient = Utils.createHttpClient();
+        mHttpClient = Utils.createHttpClient(true);
     }
 
     public void login(String username, String password) throws IOException, LoginException {
