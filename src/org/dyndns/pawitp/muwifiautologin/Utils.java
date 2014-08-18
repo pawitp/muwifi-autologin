@@ -26,8 +26,8 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    static final int CONNECTION_TIMEOUT = 2000;
-    static final int SOCKET_TIMEOUT = 2000;
+    static final int CONNECTION_TIMEOUT = 30000;
+    static final int SOCKET_TIMEOUT = 30000;
 
     public static String getVersionName(Context context) {
         try {
