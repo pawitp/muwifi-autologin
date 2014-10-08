@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -94,6 +95,18 @@ public class Utils {
         catch (Exception e) {
             // Too many to handle individually
             Log.e(TAG, "", e);
+            return null;
+        }
+    }
+
+    public static String getSsid(Context context) {
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        try {
+            return wifi.getConnectionInfo().getSSID();
+        }
+        catch (NullPointerException e) {
+            // So many things can be null here when network is not connected
+            Log.d(TAG, "Exception getting SSID", e);
             return null;
         }
     }

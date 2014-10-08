@@ -26,6 +26,7 @@ public class MuWifiLogin extends IntentService {
     static final int LOGIN_ERROR_ID = 1;
     static final int LOGIN_ONGOING_ID = 2;
     static final String EXTRA_LOGOUT = "logout";
+    static final String IC_WIFI_SSID = "IC-WiFi";
 
     private Handler mHandler;
     private SharedPreferences mPrefs;
@@ -198,9 +199,8 @@ public class MuWifiLogin extends IntentService {
             return new CiscoClient();
         }
         else {
-            // Assume aruba
-            Log.v(TAG, "Aruba network");
-            return new ArubaClient();
+            // Assume Aruba
+            return getArubaClient();
         }
     }
 
@@ -209,12 +209,25 @@ public class MuWifiLogin extends IntentService {
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         Log.d(TAG, "IP :" + ip);
         if (ip.startsWith("10.7.")) {
-            // Cisco authentication
+            // Cisco IP
             Log.v(TAG, "Cisco network");
             return new CiscoClient();
         }
         else {
-            // Assume aruba
+            // Assume Aruba
+            return getArubaClient();
+        }
+    }
+
+    /**
+     * Get a ArubaClient or ArubaIcClient based on SSID
+     */
+    private LoginClient getArubaClient() throws IOException, LoginException {
+        String ssid = Utils.getSsid(this);
+        if (ssid != null && ssid.contains(IC_WIFI_SSID)) {
+            Log.v(TAG, "Aruba IC network");
+            return new ArubaIcClient();
+        } else {
             Log.v(TAG, "Aruba network");
             return new ArubaClient();
         }
