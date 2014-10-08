@@ -184,7 +184,7 @@ public class MuWifiLogin extends IntentService {
 
     private LoginClient getLoginClient() throws IOException, LoginException {
         HttpGet httpget = new HttpGet("http://client3.google.com/generate_204");
-        HttpResponse response = Utils.createHttpClient(false).execute(httpget);
+        HttpResponse response = Utils.createHttpClient(true, null).execute(httpget);
 
         if (response.getStatusLine().getStatusCode() == 204) {
             // We're online! No login required
@@ -226,7 +226,7 @@ public class MuWifiLogin extends IntentService {
         String ssid = Utils.getSsid(this);
         if (ssid != null && ssid.contains(IC_WIFI_SSID)) {
             Log.v(TAG, "Aruba IC network");
-            return new ArubaIcClient();
+            return new ArubaIcClient(this);
         } else {
             Log.v(TAG, "Aruba network");
             return new ArubaClient();

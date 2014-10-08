@@ -31,7 +31,8 @@ public class CiscoClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public CiscoClient() {
-        mHttpClient = Utils.createHttpClient(false);
+        mHttpClient = Utils.createHttpClient(true, null);
+        // TODO: Add certificate pinning
     }
 
     public void login(String username, String password) throws IOException, LoginException {

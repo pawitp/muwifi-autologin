@@ -20,6 +20,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.Locale;
 
@@ -59,7 +62,7 @@ public class Utils {
         context.getPackageManager().setComponentEnabledSetting(receiver, state, PackageManager.DONT_KILL_APP);
     }
 
-    public static DefaultHttpClient createHttpClient(boolean verifyCert) {
+    public static DefaultHttpClient createHttpClient(boolean customVerify, byte[] trustedDer) {
         // SSL stuff
         try {
             HttpParams params = new BasicHttpParams();
@@ -68,7 +71,11 @@ public class Utils {
 
             DefaultHttpClient httpClient;
 
-            if (verifyCert) {
+            if (!customVerify) {
+                if (trustedDer != null) {
+                    throw new IllegalArgumentException("customVerify must be true when using trustedDer");
+                }
+
                 // Use default HTTP client
                 httpClient = new DefaultHttpClient();
             } else {
@@ -76,7 +83,7 @@ public class Utils {
                 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 trustStore.load(null, null);
 
-                SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+                SSLSocketFactory sf = new MySSLSocketFactory(trustStore, trustedDer);
                 sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
                 SchemeRegistry registry = new SchemeRegistry();
@@ -109,5 +116,19 @@ public class Utils {
             Log.d(TAG, "Exception getting SSID", e);
             return null;
         }
+    }
+
+    public static byte[] getRawResource(Context context, int id) throws IOException {
+        InputStream is = context.getResources().openRawResource(id);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        int size;
+        byte[] buffer = new byte[1024];
+        while ((size = is.read(buffer)) >= 0) {
+            baos.write(buffer, 0, size);
+        }
+        is.close();
+
+        return baos.toByteArray();
     }
 }

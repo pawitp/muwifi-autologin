@@ -4,10 +4,6 @@ import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
-
-import javax.net.ssl.SSLHandshakeException;
 
 // Retry handler allowing the retry of POST requests
 public class PostRetryHandler implements HttpRequestRetryHandler {
