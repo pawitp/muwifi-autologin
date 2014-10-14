@@ -196,7 +196,7 @@ public class MuWifiLogin extends IntentService {
         if (strRes.contains("https://1.1.1.1/login.html")) {
             // Cisco authentication
             Log.v(TAG, "Cisco network");
-            return new CiscoClient();
+            return new CiscoClient(this);
         }
         else {
             // Assume Aruba
@@ -211,7 +211,7 @@ public class MuWifiLogin extends IntentService {
         if (ip.startsWith("10.7.")) {
             // Cisco IP
             Log.v(TAG, "Cisco network");
-            return new CiscoClient();
+            return new CiscoClient(this);
         }
         else {
             // Assume Aruba

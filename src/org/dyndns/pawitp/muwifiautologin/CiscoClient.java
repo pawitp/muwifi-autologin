@@ -1,5 +1,6 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -30,9 +31,8 @@ public class CiscoClient implements LoginClient {
 
     private DefaultHttpClient mHttpClient;
 
-    public CiscoClient() {
-        mHttpClient = Utils.createHttpClient(true, null);
-        // TODO: Add certificate pinning
+    public CiscoClient(Context context) throws IOException {
+        mHttpClient = Utils.createHttpClient(true, Utils.getRawResource(context, R.raw.cisco));
     }
 
     public void login(String username, String password) throws IOException, LoginException {
