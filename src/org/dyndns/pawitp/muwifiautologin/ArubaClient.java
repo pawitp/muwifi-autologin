@@ -1,5 +1,6 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -33,8 +34,8 @@ public class ArubaClient implements LoginClient {
 
     private DefaultHttpClient mHttpClient;
 
-    public ArubaClient() {
-        mHttpClient = Utils.createHttpClient(false, null);
+    public ArubaClient(Context context) throws IOException {
+        mHttpClient = Utils.createHttpClient(true, Utils.getRawResource(context, R.raw.aruba));
     }
 
     public void login(String username, String password) throws IOException, LoginException {

@@ -229,7 +229,7 @@ public class MuWifiLogin extends IntentService {
             return new ArubaIcClient(this);
         } else {
             Log.v(TAG, "Aruba network");
-            return new ArubaClient();
+            return new ArubaClient(this);
         }
     }
 
