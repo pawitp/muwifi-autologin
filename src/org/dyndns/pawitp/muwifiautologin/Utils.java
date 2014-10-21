@@ -77,7 +77,7 @@ public class Utils {
                 }
 
                 // Use default HTTP client
-                httpClient = new DefaultHttpClient();
+                httpClient = new DefaultHttpClient(params);
             } else {
                 // Create an HTTP client that doesn't verify SSL certificates
                 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
