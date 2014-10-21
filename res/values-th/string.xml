@@ -37,4 +37,6 @@
 	<string name="notify_login_error_title">ไม่สามารถเข้าสู่ระบบ MU-WiFi ได้</string>
 	<string name="notify_logout_error_title">ไม่สามารถออกจากระบบ MU-WiFi ได้</string>
 	<string name="notify_login_error_text">กดเพื่อลองอีกครั้ง</string>
+	<string name="notify_request_wifi_ongoing_text">กำลังเรียกร้องการเชื่อมต่อ Wi-Fi…</string>
+	<string name="notify_request_wifi_error_text">ไม่สามารถเรียกร้องการเชื่อมต่อ Wi-Fi ได้</string>
 </resources>

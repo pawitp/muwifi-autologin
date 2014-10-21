@@ -1,5 +1,6 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,7 +8,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.format.Formatter;
@@ -28,6 +32,8 @@ public class MuWifiLogin extends IntentService {
     static final String EXTRA_LOGOUT = "logout";
     static final String IC_WIFI_SSID = "IC-WiFi";
 
+    static final int NETWORK_TIMEOUT = 3000;
+
     private Handler mHandler;
     private SharedPreferences mPrefs;
     private NotificationManager mNotifMan;
@@ -47,7 +53,7 @@ public class MuWifiLogin extends IntentService {
         mNotifMan = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotification = new Notification(R.drawable.ic_stat_notify_key, null, System.currentTimeMillis());
-        updateOngoingNotification(null, false); // Foreground service requires a valid notification
+        updateOngoingNotification(getString(R.string.notify_request_wifi_ongoing_text), false); // Foreground service requires a valid notification
         startForeground(LOGIN_ONGOING_ID, mNotification); // Stopped automatically when onHandleIntent returns
     }
 
@@ -57,6 +63,38 @@ public class MuWifiLogin extends IntentService {
 
         boolean isLogout = intent.getBooleanExtra(EXTRA_LOGOUT, false);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // For Lollipop+, we need to request the Wi-Fi network since
+            // connections will go over mobile data by default if a captive
+            // portal is detected
+            Log.v(TAG, "Requesting Wi-Fi network");
+
+            if (!requestNetwork()) {
+                Log.e(TAG, "Unable to request Wi-Fi network");
+                createRetryNotification(isLogout, getString(R.string.notify_request_wifi_error_text));
+                return;
+            }
+        }
+
+        doLogin(isLogout);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private boolean requestNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        for (Network net : cm.getAllNetworks()) {
+            if (cm.getNetworkInfo(net).getType() == ConnectivityManager.TYPE_WIFI) {
+                Log.d(TAG, "Set network to " + net);
+                ConnectivityManager.setProcessDefaultNetwork(net);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void doLogin(boolean isLogout) {
         try {
             if (isLogout) {
                 Log.v(TAG, "Logging out");

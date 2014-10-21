@@ -37,4 +37,6 @@
 	<string name="notify_login_error_title">Unable to login to MU-WiFi</string>
 	<string name="notify_logout_error_title">Unable to logout from MU-WiFi</string>
 	<string name="notify_login_error_text">Click to retry.</string>
+	<string name="notify_request_wifi_ongoing_text">Requesting Wi-Fi communication…</string>
+	<string name="notify_request_wifi_error_text">Unable to request Wi-Fi communication</string>
 </resources>
