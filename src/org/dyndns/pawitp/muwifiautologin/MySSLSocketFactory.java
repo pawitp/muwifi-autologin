@@ -1,5 +1,7 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.util.Log;
+
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.IOException;
@@ -15,10 +17,14 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class MySSLSocketFactory extends SSLSocketFactory {
+
+    private static final String TAG = "MySSLSocketFactory";
+    private static final String ADD_CIPHER_SUITE = "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA";
 
     private SSLContext mSslContext = SSLContext.getInstance("TLS");
 
@@ -55,7 +61,30 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 
     @Override
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
-        return mSslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
+        SSLSocket ss = (SSLSocket) mSslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
+
+        // Lollipop disables TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA used in
+        // Aruba networks, so we must re-enable it
+        String[] suites = ss.getEnabledCipherSuites();
+        boolean foundSuite = false;
+        for (int i = 0; i < suites.length; i++) {
+            if (ADD_CIPHER_SUITE.equals(suites[i])) {
+                foundSuite = true;
+                break;
+            }
+        }
+
+        if (!foundSuite) {
+            Log.v(TAG, "Adding cipher suite " + ADD_CIPHER_SUITE);
+            String[] newSuites = new String[suites.length + 1];
+            for (int i = 0; i < suites.length; i++) {
+                newSuites[i] = suites[i];
+            }
+            newSuites[suites.length] = ADD_CIPHER_SUITE;
+            ss.setEnabledCipherSuites(newSuites);
+        }
+
+        return ss;
     }
 
     @Override
