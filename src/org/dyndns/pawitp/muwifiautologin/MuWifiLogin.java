@@ -38,6 +38,7 @@ public class MuWifiLogin extends IntentService {
     private SharedPreferences mPrefs;
     private NotificationManager mNotifMan;
     private Notification mNotification;
+    private Network mNetwork;
 
     public MuWifiLogin() {
         super(TAG);
@@ -86,12 +87,27 @@ public class MuWifiLogin extends IntentService {
         for (Network net : cm.getAllNetworks()) {
             if (cm.getNetworkInfo(net).getType() == ConnectivityManager.TYPE_WIFI) {
                 Log.d(TAG, "Set network to " + net);
+                mNetwork = net;
                 ConnectivityManager.setProcessDefaultNetwork(net);
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Report successful to Lollipop's captive portal detector
+     *
+     * See CaptivePortalLoginActivity in frameworks/base
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void reportStateChange() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // We're reporting "good" network. This function forces Android to
+        // re-evaluate the network (and realize it's no longer a captive portal).
+        cm.reportBadNetwork(mNetwork);
     }
 
     private void doLogin(boolean isLogout) {
@@ -104,6 +120,14 @@ public class MuWifiLogin extends IntentService {
                 loginClient.logout();
 
                 createToastNotification(R.string.logout_successful, Toast.LENGTH_SHORT);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Report logout successful so Android stops using this network
+                    // (or at least that should happen, but 5.0.0_r2 doesn't seem to
+                    // automatically switch to cellular)
+                    reportStateChange();
+                }
+
                 Log.v(TAG, "Logout successful");
             } else {
                 updateOngoingNotification(getString(R.string.notify_login_ongoing_text_determine_requirement), true);
@@ -119,6 +143,11 @@ public class MuWifiLogin extends IntentService {
 
                     if (mPrefs.getBoolean(Preferences.KEY_TOAST_NOTIFY_SUCCESS, true)) {
                         createToastNotification(R.string.login_successful, Toast.LENGTH_SHORT);
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        // Report login successful so Android starts using this network
+                        reportStateChange();
                     }
 
                     Log.v(TAG, "Login successful");
