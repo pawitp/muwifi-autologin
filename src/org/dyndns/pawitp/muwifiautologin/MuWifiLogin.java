@@ -30,7 +30,6 @@ public class MuWifiLogin extends IntentService {
     static final int LOGIN_ERROR_ID = 1;
     static final int LOGIN_ONGOING_ID = 2;
     static final String EXTRA_LOGOUT = "logout";
-    static final String IC_WIFI_SSID = "IC-WiFi";
 
     static final int NETWORK_TIMEOUT = 3000;
 
@@ -260,15 +259,8 @@ public class MuWifiLogin extends IntentService {
 
         String strRes = EntityUtils.toString(response.getEntity());
         Log.d(TAG, strRes);
-        if (strRes.contains("https://1.1.1.1/login.html")) {
-            // Cisco authentication
-            Log.v(TAG, "Cisco network");
-            return new CiscoClient();
-        }
-        else {
-            // Assume Aruba
-            return getArubaClient();
-        }
+
+        return getLogoutClient();
     }
 
     private LoginClient getLogoutClient() throws IOException, LoginException {
@@ -280,24 +272,14 @@ public class MuWifiLogin extends IntentService {
             Log.v(TAG, "Cisco network");
             return new CiscoClient();
         }
+        else if (ip.startsWith("10.21.")) {
+            // IC-WiFi IP
+            Log.v(TAG, "IC-WiFi network");
+            return new IcClient();
+        }
         else {
             // Assume Aruba
-            return getArubaClient();
-        }
-    }
-
-    /**
-     * Get a ArubaClient or ArubaIcClient based on SSID
-     */
-    private LoginClient getArubaClient() throws IOException, LoginException {
-        String ssid = Utils.getSsid(this);
-        if (ssid != null && ssid.contains(IC_WIFI_SSID)) {
-            Log.v(TAG, "Aruba IC network");
-            return new ArubaIcClient(this);
-        } else {
-            Log.v(TAG, "Aruba network");
             return new ArubaClient(this);
         }
     }
-
 }
