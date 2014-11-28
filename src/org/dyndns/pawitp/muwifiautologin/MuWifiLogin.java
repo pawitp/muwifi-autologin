@@ -26,12 +26,10 @@ import java.io.IOException;
 
 public class MuWifiLogin extends IntentService {
 
-    static final String TAG = "MuWifiLogin";
-    static final int LOGIN_ERROR_ID = 1;
-    static final int LOGIN_ONGOING_ID = 2;
-    static final String EXTRA_LOGOUT = "logout";
-
-    static final int NETWORK_TIMEOUT = 3000;
+    private static final String TAG = "MuWifiLogin";
+    private static final int LOGIN_ERROR_ID = 1;
+    private static final int LOGIN_ONGOING_ID = 2;
+    public static final String EXTRA_LOGOUT = "logout";
 
     private Handler mHandler;
     private SharedPreferences mPrefs;

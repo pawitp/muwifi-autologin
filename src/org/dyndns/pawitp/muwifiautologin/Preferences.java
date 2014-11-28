@@ -18,29 +18,29 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-    static final String KEY_LOGIN_NOW = "login_now";
-    static final String KEY_LOGOUT_NOW = "logout_now";
-    static final String KEY_ENABLED = "enabled";
-    static final String KEY_USERNAME = "username";
-    static final String KEY_PASSWORD = "password";
-    static final String KEY_ERROR_NOTIFY = "error_notify";
-    static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
-    static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
-    static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
-    static final String KEY_TOAST_NOTIFY = "toast_notify";
-    static final String KEY_TOAST_NOTIFY_SUCCESS = "toast_notify_success";
-    static final String KEY_TOAST_NOTIFY_NOT_REQUIRED = "toast_notify_not_required";
-    static final String KEY_LANGUAGE = "language";
-    static final String KEY_VERSION = "version";
-    static final String KEY_WEBSITE = "website";
-    static final String KEY_AUTHOR = "author";
+    public static final String KEY_LOGIN_NOW = "login_now";
+    public static final String KEY_LOGOUT_NOW = "logout_now";
+    public static final String KEY_ENABLED = "enabled";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASSWORD = "password";
+    public static final String KEY_ERROR_NOTIFY = "error_notify";
+    public static final String KEY_ERROR_NOTIFY_SOUND = "error_notify_sound";
+    public static final String KEY_ERROR_NOTIFY_VIBRATE = "error_notify_vibrate";
+    public static final String KEY_ERROR_NOTIFY_LIGHTS = "error_notify_lights";
+    public static final String KEY_TOAST_NOTIFY = "toast_notify";
+    public static final String KEY_TOAST_NOTIFY_SUCCESS = "toast_notify_success";
+    public static final String KEY_TOAST_NOTIFY_NOT_REQUIRED = "toast_notify_not_required";
+    public static final String KEY_LANGUAGE = "language";
+    public static final String KEY_VERSION = "version";
+    public static final String KEY_WEBSITE = "website";
+    public static final String KEY_AUTHOR = "author";
 
-    static final String LANGUAGE_DEFAULT = "default";
-    static final String MARKET_PREFIX = "market://details?id=";
-    static final String EMAIL_TYPE = "message/rfc822";
-    static final String EMAIL_AUTHOR = "p.pawit@gmail.com";
-    static final String EMAIL_SUBJECT = "[MU-WiFi Autologin] ";
-    static final String WEBSITE_URL = "http://pawitp.dats.us/muwifi-autologin/";
+    public static final String LANGUAGE_DEFAULT = "default";
+    public static final String MARKET_PREFIX = "market://details?id=";
+    public static final String EMAIL_TYPE = "message/rfc822";
+    public static final String EMAIL_AUTHOR = "p.pawit@gmail.com";
+    public static final String EMAIL_SUBJECT = "[MU-WiFi Autologin] ";
+    public static final String WEBSITE_URL = "http://pawitp.dats.us/muwifi-autologin/";
 
     /** Called when the activity is first created. */
     @Override

@@ -20,13 +20,13 @@ public class CiscoClient implements LoginClient {
     private static final String TAG = "CiscoClient";
 
     // These are not regex
-    static final String LOGIN_FAIL_PATTERN = "<INPUT TYPE=\"hidden\" NAME=\"err_flag\" SIZE=\"16\" MAXLENGTH=\"15\" VALUE=\"1\">";
-    static final String LOGOUT_SUCCESSFUL_PATTERN = "To complete the log off process and to prevent access";
+    private static final String LOGIN_FAIL_PATTERN = "<INPUT TYPE=\"hidden\" NAME=\"err_flag\" SIZE=\"16\" MAXLENGTH=\"15\" VALUE=\"1\">";
+    private static final String LOGOUT_SUCCESSFUL_PATTERN = "To complete the log off process and to prevent access";
 
-    static final String FORM_USERNAME = "username";
-    static final String FORM_PASSWORD = "password";
-    static final String FORM_URL = "https://1.1.1.1/login.html";
-    static final String LOGOUT_URL = "https://1.1.1.1/logout.html";
+    private static final String FORM_USERNAME = "username";
+    private static final String FORM_PASSWORD = "password";
+    private static final String FORM_URL = "https://1.1.1.1/login.html";
+    private static final String LOGOUT_URL = "https://1.1.1.1/logout.html";
 
     private DefaultHttpClient mHttpClient;
 

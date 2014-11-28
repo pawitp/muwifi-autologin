@@ -24,13 +24,13 @@ public class ArubaClient implements LoginClient {
     private static final String TAG = "ArubaClient";
 
     // These are not regex
-    static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
-    static final String LOGOUT_SUCCESSFUL_PATTERN = "Logout Successful";
+    private static final String LOGIN_SUCCESSFUL_PATTERN = "External Welcome Page";
+    private static final String LOGOUT_SUCCESSFUL_PATTERN = "Logout Successful";
 
-    static final String FORM_USERNAME = "user";
-    static final String FORM_PASSWORD = "password";
-    static final String FORM_URL = "https://captiveportal-login.mahidol.ac.th/auth/index.html/u";
-    static final String LOGOUT_URL = "https://captiveportal-login.mahidol.ac.th/auth/logout.html";
+    private static final String FORM_USERNAME = "user";
+    private static final String FORM_PASSWORD = "password";
+    private static final String FORM_URL = "https://captiveportal-login.mahidol.ac.th/auth/index.html/u";
+    private static final String LOGOUT_URL = "https://captiveportal-login.mahidol.ac.th/auth/logout.html";
 
     private DefaultHttpClient mHttpClient;
 
