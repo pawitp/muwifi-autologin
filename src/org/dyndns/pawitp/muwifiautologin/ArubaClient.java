@@ -82,4 +82,9 @@ public class ArubaClient implements LoginClient {
         }
     }
 
+    @Override
+    public boolean allowAuto() {
+        return true;
+    }
+
 }

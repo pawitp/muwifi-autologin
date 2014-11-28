@@ -39,4 +39,6 @@
 	<string name="notify_login_error_text">Click to retry.</string>
 	<string name="notify_request_wifi_ongoing_text">Requesting Wi-Fi communication…</string>
 	<string name="notify_request_wifi_error_text">Unable to request Wi-Fi communication</string>
+	<string name="notify_request_wifi_connected_title">Connected to %s</string>
+	<string name="notify_request_wifi_connected_text">Click here to login.</string>
 </resources>

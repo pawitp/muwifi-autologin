@@ -29,7 +29,9 @@ public class MuWifiLogin extends IntentService {
     private static final String TAG = "MuWifiLogin";
     private static final int LOGIN_ERROR_ID = 1;
     private static final int LOGIN_ONGOING_ID = 2;
+
     public static final String EXTRA_LOGOUT = "logout";
+    public static final String EXTRA_USER_TRIGGERED = "user_triggered";
 
     private Handler mHandler;
     private SharedPreferences mPrefs;
@@ -60,6 +62,7 @@ public class MuWifiLogin extends IntentService {
         mNotifMan.cancel(LOGIN_ERROR_ID); // clear any old notification
 
         boolean isLogout = intent.getBooleanExtra(EXTRA_LOGOUT, false);
+        boolean isUserTriggered = intent.getBooleanExtra(EXTRA_USER_TRIGGERED, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // For Lollipop+, we need to request the Wi-Fi network since
@@ -69,12 +72,12 @@ public class MuWifiLogin extends IntentService {
 
             if (!requestNetwork()) {
                 Log.e(TAG, "Unable to request Wi-Fi network");
-                createRetryNotification(isLogout, getString(R.string.notify_request_wifi_error_text));
+                createRetryNotification(isLogout, null, getString(R.string.notify_request_wifi_error_text));
                 return;
             }
         }
 
-        doLogin(isLogout);
+        doLogin(isLogout, isUserTriggered);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -107,7 +110,7 @@ public class MuWifiLogin extends IntentService {
         cm.reportBadNetwork(mNetwork);
     }
 
-    private void doLogin(boolean isLogout) {
+    private void doLogin(boolean isLogout, boolean isUserTriggered) {
         try {
             if (isLogout) {
                 Log.v(TAG, "Logging out");
@@ -131,6 +134,14 @@ public class MuWifiLogin extends IntentService {
                 LoginClient loginClient = getLoginClient();
                 if (loginClient != null) {
                     Log.v(TAG, "Login required");
+
+                    if (!isUserTriggered && !loginClient.allowAuto()) {
+                        // Require user to click login for insecure hotspots
+                        createRetryNotification(isLogout,
+                                String.format(getString(R.string.notify_request_wifi_connected_title), Utils.getSsid(this)),
+                                getString(R.string.notify_request_wifi_connected_text));
+                        return;
+                    }
 
                     String username = mPrefs.getString(Preferences.KEY_USERNAME, null);
                     String password = mPrefs.getString(Preferences.KEY_PASSWORD, null);
@@ -159,7 +170,7 @@ public class MuWifiLogin extends IntentService {
         } catch (LoginException e) {
             Log.e(TAG, "Login failed: LoginException", e);
 
-            createRetryNotification(isLogout, e.getMessage());
+            createRetryNotification(isLogout, null, e.getMessage());
         } catch (IOException e) {
             Log.e(TAG, "Login failed: IOException", e);
 
@@ -199,18 +210,24 @@ public class MuWifiLogin extends IntentService {
         }
     }
 
-    private void createRetryNotification(boolean isLogout, String text) {
+    private void createRetryNotification(boolean isLogout, String title, String text) {
         Intent notificationIntent = new Intent(this, MuWifiLogin.class);
         notificationIntent.putExtra(EXTRA_LOGOUT, isLogout);
+        notificationIntent.putExtra(EXTRA_USER_TRIGGERED, true);
         PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        createErrorNotification(contentIntent, text, isLogout);
+
+        if (title == null) {
+            title = getString(isLogout ? R.string.notify_logout_error_title : R.string.notify_login_error_title);
+        }
+
+        createErrorNotification(contentIntent, title, text, isLogout);
     }
 
     private void createRetryNotification(boolean isLogout) {
-        createRetryNotification(isLogout, getString(R.string.notify_login_error_text));
+        createRetryNotification(isLogout, null, getString(R.string.notify_login_error_text));
     }
 
-    private void createErrorNotification(PendingIntent contentIntent, String errorText, boolean isLogout) {
+    private void createErrorNotification(PendingIntent contentIntent, String title, String errorText, boolean isLogout) {
         Log.d(TAG, "createErrorNotification isLogout=" + isLogout);
 
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -219,9 +236,8 @@ public class MuWifiLogin extends IntentService {
             return;
         }
 
-        int message = isLogout ? R.string.notify_logout_error_title : R.string.notify_login_error_title;
-        Notification notification = new Notification(R.drawable.ic_stat_notify_key, getString(message), System.currentTimeMillis());
-        notification.setLatestEventInfo(this, getString(message), errorText, contentIntent);
+        Notification notification = new Notification(R.drawable.ic_stat_notify_key, title, System.currentTimeMillis());
+        notification.setLatestEventInfo(this, title, errorText, contentIntent);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
 
         if (mPrefs.getBoolean(Preferences.KEY_ERROR_NOTIFY_SOUND, false)) {

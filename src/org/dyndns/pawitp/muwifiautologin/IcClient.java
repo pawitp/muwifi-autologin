@@ -84,4 +84,9 @@ public class IcClient implements LoginClient {
         }
     }
 
+    @Override
+    public boolean allowAuto() {
+        return false;
+    }
+
 }

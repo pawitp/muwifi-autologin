@@ -85,4 +85,9 @@ public class CiscoClient implements LoginClient {
         }
     }
 
+    @Override
+    public boolean allowAuto() {
+        return false;
+    }
+
 }

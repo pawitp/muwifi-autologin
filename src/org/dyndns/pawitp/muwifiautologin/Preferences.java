@@ -65,6 +65,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
                 WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                 if (wifi.isWifiEnabled()) {
                     Intent i = new Intent(Preferences.this, MuWifiLogin.class);
+                    i.putExtra(MuWifiLogin.EXTRA_USER_TRIGGERED, true);
                     startService(i);
                 }
                 else {
@@ -82,6 +83,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
                 if (wifi.isWifiEnabled()) {
                     Intent i = new Intent(Preferences.this, MuWifiLogin.class);
                     i.putExtra(MuWifiLogin.EXTRA_LOGOUT, true);
+                    i.putExtra(MuWifiLogin.EXTRA_USER_TRIGGERED, true);
                     startService(i);
                 }
                 else {
