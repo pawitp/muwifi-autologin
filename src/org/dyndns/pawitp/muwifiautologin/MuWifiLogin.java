@@ -286,7 +286,7 @@ public class MuWifiLogin extends IntentService {
             Log.v(TAG, "Cisco network");
             return new CiscoClient();
         }
-        else if (ip.startsWith("10.21.")) {
+        else if (ip.startsWith("10.27.")) {
             // IC-WiFi IP
             Log.v(TAG, "IC-WiFi network");
             return new IcClient();

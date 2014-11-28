@@ -20,7 +20,7 @@ public class IcClient implements LoginClient {
     private static final String TAG = "IcClient";
 
     // These are not regex
-    private static final String LOGIN_FAIL_PATTERN = "<INPUT TYPE=\"hidden\" NAME=\"err_flag\" SIZE=\"16\" MAXLENGTH=\"15\" VALUE=\"1\">";
+    private static final String LOGIN_SUCCESSFUL_PATTERN = "You can now use all our regular network services over the wireless network.";
     private static final String LOGOUT_SUCCESSFUL_PATTERN = "To complete the log off process and to prevent access";
 
     private static final String FORM_USERNAME = "username";
@@ -52,11 +52,11 @@ public class IcClient implements LoginClient {
 
         Log.d(TAG, strRes);
 
-        if (strRes.contains(LOGIN_FAIL_PATTERN)) {
-            // login fail (extracted message from server)
-            throw new LoginException("The User Name and Password combination you have entered is invalid. Please try again.");
-        } else {
+        if (strRes.contains(LOGIN_SUCCESSFUL_PATTERN)) {
             // login successful
+        } else {
+            // login fail
+            throw new LoginException("Incorrect username or password.");
         }
     }
 
