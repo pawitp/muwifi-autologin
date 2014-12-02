@@ -35,7 +35,10 @@ public class ArubaClient implements LoginClient {
     private DefaultHttpClient mHttpClient;
 
     public ArubaClient(Context context) throws IOException {
-        mHttpClient = Utils.createHttpClient(true, Utils.getRawResource(context, R.raw.aruba));
+        mHttpClient = Utils.createHttpClient(true, new byte[][] {
+                Utils.getRawResource(context, R.raw.aruba),
+                Utils.getRawResource(context, R.raw.aruba2) // Found from 202.28.167.43
+        });
     }
 
     public void login(String username, String password) throws IOException, LoginException {

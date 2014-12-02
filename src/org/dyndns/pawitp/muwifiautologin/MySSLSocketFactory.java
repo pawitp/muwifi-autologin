@@ -31,7 +31,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 
     private SSLContext mSslContext = SSLContext.getInstance("TLS");
 
-    public MySSLSocketFactory(KeyStore truststore, final byte[] trustedDer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
+    public MySSLSocketFactory(KeyStore truststore, final byte[][] trustedDers) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
         super(truststore);
 
         // Basically a "trust-all" trust manager
@@ -43,17 +43,26 @@ public class MySSLSocketFactory extends SSLSocketFactory {
             }
 
             public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                if (trustedDer != null) {
+                if (trustedDers != null) {
                     // If trustedDer is set, we pin to only trust this certificate
                     if (chain.length == 0) {
                         throw new CertificateException("No certificate chain provided");
-                    } else if (!Arrays.equals(chain[0].getEncoded(), trustedDer)) {
+                    } else if (!checkTrustedDers(chain[0].getEncoded(), trustedDers)) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
                             dumpInfo(chain[0]);
                         }
                         throw new CertificateException("Certificate does not match pinned certificate " + chain[0]);
                     }
                 }
+            }
+
+            private boolean checkTrustedDers(byte[] encoded, byte[][] trustedDers) {
+                for (byte[] der : trustedDers) {
+                    if (Arrays.equals(encoded, der)) {
+                        return true;
+                    }
+                }
+                return false;
             }
 
             @TargetApi(Build.VERSION_CODES.FROYO)

@@ -64,7 +64,7 @@ public class Utils {
         context.getPackageManager().setComponentEnabledSetting(receiver, state, PackageManager.DONT_KILL_APP);
     }
 
-    public static DefaultHttpClient createHttpClient(boolean customVerify, byte[] trustedDer) {
+    public static DefaultHttpClient createHttpClient(boolean customVerify, byte[][] trustedDers) {
         // SSL stuff
         try {
             HttpParams params = new BasicHttpParams();
@@ -74,7 +74,7 @@ public class Utils {
             DefaultHttpClient httpClient;
 
             if (!customVerify) {
-                if (trustedDer != null) {
+                if (trustedDers != null) {
                     throw new IllegalArgumentException("customVerify must be true when using trustedDer");
                 }
 
@@ -85,7 +85,7 @@ public class Utils {
                 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 trustStore.load(null, null);
 
-                SSLSocketFactory sf = new MySSLSocketFactory(trustStore, trustedDer);
+                SSLSocketFactory sf = new MySSLSocketFactory(trustStore, trustedDers);
                 sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
                 SchemeRegistry registry = new SchemeRegistry();
