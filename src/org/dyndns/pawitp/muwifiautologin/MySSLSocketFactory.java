@@ -1,5 +1,8 @@
 package org.dyndns.pawitp.muwifiautologin;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
@@ -35,7 +38,6 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         // (except if "trustedDer" is set, it will only trust that certificate)
         // Cisco-based system uses an invalid certificate
         // Aruba-based system uses *.mahidol.ac.th wildcard certificate and so this class should not be used.
-        // Aruba-IC-based system uses default secure.arubanetworks.com certificate
         TrustManager tm = new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             }
@@ -46,9 +48,17 @@ public class MySSLSocketFactory extends SSLSocketFactory {
                     if (chain.length == 0) {
                         throw new CertificateException("No certificate chain provided");
                     } else if (!Arrays.equals(chain[0].getEncoded(), trustedDer)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+                            dumpInfo(chain[0]);
+                        }
                         throw new CertificateException("Certificate does not match pinned certificate " + chain[0]);
                     }
                 }
+            }
+
+            @TargetApi(Build.VERSION_CODES.FROYO)
+            private void dumpInfo(X509Certificate cer) throws CertificateException {
+                Log.e(TAG, "Certificate: " + Base64.encodeToString(cer.getEncoded(), Base64.DEFAULT));
             }
 
             public X509Certificate[] getAcceptedIssuers() {

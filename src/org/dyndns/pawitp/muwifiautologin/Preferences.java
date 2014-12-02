@@ -121,6 +121,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
                 i.setType(EMAIL_TYPE);
                 i.putExtra(Intent.EXTRA_EMAIL, new String[] {EMAIL_AUTHOR});
                 i.putExtra(Intent.EXTRA_SUBJECT, EMAIL_SUBJECT);
+                i.putExtra(Intent.EXTRA_TEXT, "\n\n----\nVersion: " + Utils.getVersionName(Preferences.this)
+                        + "\nLogs:\n" + Utils.getLogCat());
 
                 startActivity(Intent.createChooser(i, ""));
                 return true;

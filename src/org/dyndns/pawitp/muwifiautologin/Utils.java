@@ -20,9 +20,11 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.KeyStore;
 import java.util.Locale;
 
@@ -130,5 +132,23 @@ public class Utils {
         is.close();
 
         return baos.toByteArray();
+    }
+
+    public static String getLogCat() {
+        try {
+            Process process = Runtime.getRuntime().exec("logcat -d");
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            StringBuilder log = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.append(line).append("\n");
+            }
+            return log.toString();
+        }
+        catch (IOException e) {
+            return null;
+        }
     }
 }
