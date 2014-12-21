@@ -41,4 +41,8 @@
 	<string name="notify_request_wifi_error_text">ไม่สามารถเรียกร้องการเชื่อมต่อ Wi-Fi ได้</string>
 	<string name="notify_request_wifi_connected_title">เชื่อมต่อกับระบบ %s</string>
 	<string name="notify_request_wifi_connected_text">กรุณากดเพื่อนเข้าสู่ระบบ</string>
+    <string name="login_shortcut">MU-WiFi เข้าสู่ระบบ</string>
+    <string name="logout_shortcut">MU-WiFi ออกจากระบบ</string>
+    <string name="login">เข้าสู่ระบบ</string>
+    <string name="logout">ออกจากระบบ</string>
 </resources>

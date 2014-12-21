@@ -18,8 +18,31 @@
             </intent-filter>
         </activity>
 
-	    <activity android:name=".ErrorWebView"></activity>
-	    <activity android:name=".IOErrorView"></activity>
+        <activity android:name=".ShortcutActivity$CreateLoginShortcut"
+                  android:label="@string/login_shortcut">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ShortcutActivity$CreateLogoutShortcut"
+                  android:label="@string/logout_shortcut">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ShortcutActivity"
+                  android:label="@string/login_shortcut"
+                  android:theme="@style/Theme.Transparent">
+            <intent-filter>
+                <action android:name="org.dyndns.pawitp.muwifiautologin.SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
 	    <receiver android:name=".NetworkStateChanged">
 	    	<intent-filter>
 	    		<action android:name="android.net.wifi.STATE_CHANGE"/>

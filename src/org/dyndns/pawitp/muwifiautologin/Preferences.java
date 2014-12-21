@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     public static final String KEY_LOGIN_NOW = "login_now";
@@ -62,15 +59,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         findPreference(KEY_LOGIN_NOW).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                if (wifi.isWifiEnabled()) {
-                    Intent i = new Intent(Preferences.this, MuWifiLogin.class);
-                    i.putExtra(MuWifiLogin.EXTRA_USER_TRIGGERED, true);
-                    startService(i);
-                }
-                else {
-                    Toast.makeText(Preferences.this, R.string.wifi_disabled, Toast.LENGTH_SHORT).show();
-                }
+                Utils.checkWifiAndDoLogin(Preferences.this, false);
                 return true;
             }
         });
@@ -79,16 +68,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         findPreference(KEY_LOGOUT_NOW).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                if (wifi.isWifiEnabled()) {
-                    Intent i = new Intent(Preferences.this, MuWifiLogin.class);
-                    i.putExtra(MuWifiLogin.EXTRA_LOGOUT, true);
-                    i.putExtra(MuWifiLogin.EXTRA_USER_TRIGGERED, true);
-                    startService(i);
-                }
-                else {
-                    Toast.makeText(Preferences.this, R.string.wifi_disabled, Toast.LENGTH_SHORT).show();
-                }
+                Utils.checkWifiAndDoLogin(Preferences.this, true);
                 return true;
             }
         });

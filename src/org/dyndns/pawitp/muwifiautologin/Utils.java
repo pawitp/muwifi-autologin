@@ -2,12 +2,14 @@ package org.dyndns.pawitp.muwifiautologin;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -149,6 +151,19 @@ public class Utils {
         }
         catch (IOException e) {
             return null;
+        }
+    }
+
+    public static void checkWifiAndDoLogin(Context context, boolean isLogout) {
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+            Intent i = new Intent(context, MuWifiLogin.class);
+            i.putExtra(MuWifiLogin.EXTRA_LOGOUT, isLogout);
+            i.putExtra(MuWifiLogin.EXTRA_USER_TRIGGERED, true);
+            context.startService(i);
+        }
+        else {
+            Toast.makeText(context, R.string.wifi_disabled, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -41,4 +41,8 @@
 	<string name="notify_request_wifi_error_text">Unable to request Wi-Fi communication</string>
 	<string name="notify_request_wifi_connected_title">Connected to %s</string>
 	<string name="notify_request_wifi_connected_text">Click here to login.</string>
+	<string name="login_shortcut">MU-WiFi Login</string>
+	<string name="logout_shortcut">MU-WiFi Logout</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
 </resources>
