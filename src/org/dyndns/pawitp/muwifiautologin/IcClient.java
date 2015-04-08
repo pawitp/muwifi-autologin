@@ -25,13 +25,13 @@ public class IcClient implements LoginClient {
 
     private static final String FORM_USERNAME = "username";
     private static final String FORM_PASSWORD = "password";
-    private static final String FORM_URL = "http://1.1.1.1/login.html";
-    private static final String LOGOUT_URL = "http://1.1.1.1/logout.html";
+    private static final String FORM_URL = "https://icwifi.mahidol.ac.th/login.html";
+    private static final String LOGOUT_URL = "https://icwifi.mahidol.ac.th/logout.html";
 
     private DefaultHttpClient mHttpClient;
 
     public IcClient() {
-        mHttpClient = Utils.createHttpClient(true, null);
+        mHttpClient = Utils.createHttpClient(false, null);
     }
 
     public void login(String username, String password) throws IOException, LoginException {
@@ -86,7 +86,7 @@ public class IcClient implements LoginClient {
 
     @Override
     public boolean allowAuto() {
-        return false;
+        return true;
     }
 
 }
