@@ -100,7 +100,13 @@ public class MySSLSocketFactory extends SSLSocketFactory {
                 newSuites[i] = suites[i];
             }
             newSuites[suites.length] = ADD_CIPHER_SUITE;
-            ss.setEnabledCipherSuites(newSuites);
+            try {
+                ss.setEnabledCipherSuites(newSuites);
+            } catch (RuntimeException e) {
+                // Newer devices no longer support this
+                // I have no idea whether this is still required or not, so let's play safe.
+                Log.w(TAG, "Unable to add cihper suite", e);
+            }
         }
 
         return ss;
